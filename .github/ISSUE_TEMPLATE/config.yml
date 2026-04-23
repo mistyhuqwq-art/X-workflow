@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussion (开放性讨论)
+    url: https://github.com/mistyhuqwq-art/X-workflow/discussions
+    about: 不是 Bug / 不是具体建议,想交流用法或架构
+  - name: 📖 文档入口
+    url: https://github.com/mistyhuqwq-art/X-workflow#readme
+    about: 先看 README 有没有回答你的问题

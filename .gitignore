@@ -1,0 +1,14 @@
+# Experience base raw logs - 使用时产生的私人日志,不进仓库
+experience-base/raw/*.json
+!experience-base/raw/.gitkeep
+
+# macOS
+.DS_Store
+
+# 编辑器临时文件
+*.swp
+*.swo
+*~
+
+# 日志
+*.log
