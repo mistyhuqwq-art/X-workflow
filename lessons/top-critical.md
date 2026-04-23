@@ -1,8 +1,10 @@
-# Top Critical Lessons —— 跨项目必读的 6 条致命教训
+# Top Critical Lessons —— 跨项目必读的 9 条致命教训
 
 > 来自真实项目踩坑。每条都是"用 2 小时起步换来的"。
 
-所有 skill 都应该提醒用户这 6 条,尤其是前端·联调 + 推公开仓库前。
+所有 skill 都应该提醒用户这 9 条,尤其是前端·联调 + 后端·编码 + 推公开仓库前。
+
+> 📊 **重要度说明**:带 🔁 标记的规律在**多个独立项目中都踩过**,属于"肯定会踩"的高危模式。
 
 ---
 
@@ -86,7 +88,93 @@ const values = form.getFieldsValue(true);
 
 ---
 
-## #6 推公开仓库前必做隐私扫描 🔒
+## #6 联调完成 = 浏览器走完全流程,不只是 curl 通 🔁
+
+**触发场景**:宣告"接口联调完成"时。
+**为什么**:curl 200 只证明 HTTP 通,无法发现 JSON 字段差异、前端 parse 错误、UI 显示异常。两个独立项目都踩过:后端说"我这 curl OK"、前端说"我这页面空白",各自都以为没问题,直到 QA 介入才暴露。
+
+**规则**:联调完成必须满足:
+- ✅ 浏览器打开目标页面
+- ✅ 走完**全流程**(增 / 删 / 改 / 查 / 异常场景)
+- ✅ Network 面板 payload + response 人工看过
+- ❌ "接口返回 200 就算完成" → 拒绝,这只是前置条件
+
+```
+联调完成定义(从弱到强):
+  Lv1. curl 200          ← 远远不够
+  Lv2. 前端 api 层拿到数据  ← 还不够
+  Lv3. 浏览器走完 CRUD     ← 最低及格线
+  Lv4. 异常场景也验过      ← 真正完成
+```
+
+---
+
+## #7 权限 API 失败不能"全放行",必须拒绝访问 🔁🔒
+
+**触发场景**:设计权限接口失败时的降级策略。
+**为什么**:空 permissions = 全放行是**高危安全模式**。权限 API 一挂 → 整个系统等于无权限 → 普通用户能访问管理员页面。两个独立项目都出现过此模式。
+
+**规则**:
+
+```typescript
+// ❌ 危险(两项目都踩过的模式)
+try {
+  const perms = await fetchPermissions();
+  setUserPerms(perms || []);  // 兜底空数组 = 全放行
+} catch {
+  setUserPerms([]);  // 权限 API 挂了 → 全放行 → 安全灾难
+}
+
+// ✅ 正确
+try {
+  const perms = await fetchPermissions();
+  if (!perms) throw new Error('权限数据异常');
+  setUserPerms(perms);
+} catch {
+  // 进入只读模式 or 跳登录页 or 显示错误
+  setAuthState('DEGRADED');  // 不是"兼容",是"拒绝"
+}
+```
+
+**配套**:QA 必须有"权限接口失败"用例(见 `qa-strategy` 的哨兵 mock 法)。
+
+---
+
+## #8 ThreadLocal 用完必须 remove(AI 一贯盲区)🔁🔒
+
+**触发场景**:用 ThreadLocal 存 UserContext / RequestContext / 租户 ID 等请求级数据。
+**为什么**:**Tomcat 等线程池复用线程**。不清 ThreadLocal → 下一个请求来用同一个线程 → 读到上一个用户的身份 → **越权访问 / 数据串号**。AI 生成这类代码时**不会主动考虑**线程池场景,是一贯盲区。
+
+```java
+// ❌ AI 常见生成(危险)
+public class UserContextHolder {
+  private static ThreadLocal<User> holder = new ThreadLocal<>();
+  public static void set(User u) { holder.set(u); }
+  public static User get() { return holder.get(); }
+  // ⚠️ 没有 remove!用户 A 结束后,用户 B 复用此线程时读到 A 的身份
+}
+
+// ✅ 正确:拦截器配对 set/remove
+public class AuthInterceptor implements HandlerInterceptor {
+  public boolean preHandle(...) {
+    UserContextHolder.set(currentUser);
+    return true;
+  }
+
+  public void afterCompletion(...) {
+    UserContextHolder.remove();  // 💡 必须显式清理,不能依赖 GC
+  }
+}
+```
+
+**规则**:
+- 用 ThreadLocal 必须在**请求边界**(拦截器 afterCompletion / Filter finally)显式 remove
+- Code review 必须专门检查这一点
+- AI 生成的代码**主动追问**:"这里的 ThreadLocal 哪里 remove?"
+
+---
+
+## #9 推公开仓库前必做隐私扫描 🔒
 
 **触发场景**:workflow-dlc / skill 包 / 任何工作流文档 push 到公开仓库前。
 **为什么**:内部飞书链接、项目名、团队关键词一旦进公开仓库,即使后来删了,**git 历史永久保留**。clone 仓库的人 `git log -p` 能看到所有历史泄漏。修复成本极高(删仓重建 or filter-repo 重写历史)。
