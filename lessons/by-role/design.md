@@ -101,3 +101,64 @@
 **触发**:有多个合理选项时。
 **为什么**:设计师替用户决定 = 用户后来发现另一个更好,返工。
 **规则**:列选项 + 每项影响,等用户回复。
+
+---
+
+## Figma API 编程类
+
+### #17 FILL 必须在 appendChild 后设置
+**触发**:用 Figma Plugin API 给节点设置颜色/填充时。
+**为什么**:节点未加入文档时设置 fills 无效,父子关系建立后才能生效。
+**规则**:
+```javascript
+parent.appendChild(node); // 先 append
+node.fills = [{ type: 'SOLID', color: { r, g, b } }]; // 再设 fills
+```
+
+### #18 Plugin API 不支持 TypeScript 语法
+**触发**:在 Figma Plugin 脚本里写 TypeScript。
+**为什么**:Plugin API 运行环境是纯 JS,TS 类型注解会报错。
+**规则**:Plugin 脚本用纯 JS 编写,或在本地用 tsc 编译后再粘贴到插件环境。
+
+### #19 Variable scopes 必须精细化,禁止 ALL_SCOPES
+**触发**:创建 Figma Variable 时。
+**为什么**:`ALL_SCOPES` 会把变量应用到所有场景,导致颜色变量错误地出现在圆角等属性中。
+**规则**:颜色变量只绑 FILL/STROKE,间距变量只绑 GAP/PADDING 等对应 scope。
+
+### #20 setBoundVariableForPaint 的 base paint 必须用实际色值
+**触发**:用 Plugin API 绑定颜色变量到节点时。
+**为什么**:base paint 留空或用错误颜色 → 绑定后渲染出错误颜色。
+**规则**:创建 paint 时必须传入变量的解析后实际色值作为 base,再 setBoundVariable 绑定语义变量。
+
+---
+
+## 组件库质量类
+
+### #21 Tab 导航和 FilterChip 语义不同,不能互用
+**触发**:搭 organism 级组件时,看到两者外观相似。
+**为什么**:Tab 是单选导航(切换视图),FilterChip 是多选过滤(缩小范围),语义完全不同。
+**规则**:导航用 tabs_status,内容过滤用 chip_filter,混用会让用户产生操作困惑。
+
+### #22 组件初版 review 后才能用于原型
+**触发**:组件库刚建好,想立即开始出原型时。
+**为什么**:组件库未 review 直接出原型 → 原型引用错误组件 → 交付后开发返工。
+**规则**:组件库经 review(可用度 80%+ )后才进入原型阶段,两步串行。
+
+### #23 COMPONENT_SET 不支持 createInstance
+**触发**:用 Plugin API 对 ComponentSet 调用 createInstance() 时。
+**为什么**:ComponentSet 是组件集合容器,不能直接实例化,必须先取到具体 Component。
+**规则**:先 `componentSet.children` 找到具体的 Component 节点,再调用 `.createInstance()`。
+
+---
+
+## 设计规范落地类
+
+### #24 颜色必须集中管理,禁止散落 hex
+**触发**:向代码文件写入颜色值时。
+**为什么**:硬编码 hex 散落各处 → 品牌色更新时逐文件改,必然遗漏。
+**规则**:所有颜色集中到 `colors.ts` 或 ConfigProvider,组件只引用语义变量,不直接写 hex。
+
+### #25 可变字体需用原生字重值,不用标准 Web 值
+**触发**:为设计稿或代码配置可变字体字重时。
+**为什么**:标准 Web 值(400/500/600)在可变字体渲染偏细,视觉效果不符合设计规范。
+**规则**:查字体的原生字重轴范围,用实际 CSS font-variation-settings 值(如 330/380/520/630)。

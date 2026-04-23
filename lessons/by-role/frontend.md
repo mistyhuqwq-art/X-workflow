@@ -130,3 +130,106 @@ const extConfig = typeof detail.extConfig === 'string'
 **触发**:需要调整实例内部列宽等 override 不到的地方。
 **为什么**:detach 断了和 Style 的关联,字体/颜色会乱。
 **规则**:detach 后立即 findAll TEXT,重新绑 textStyleId。
+
+---
+
+## 联调防御类
+
+### #21 联调完成 = 浏览器走完全流程,不只是 curl 通
+**触发**:宣告"接口联调完成"时。
+**为什么**:curl 200 只证明 HTTP 通,无法发现 JSON 字段差异、前端 parse 错误、UI 显示异常等实际 bug。
+**规则**:必须用浏览器打开目标页面,走完增/删/改/查全流程,才算联调完成。
+
+### #22 自定义组件通过 antd DisabledContext 获取 disabled
+**触发**:在 Form 中使用自定义组件(RadioCard/Chip/Switch 等)时。
+**为什么**:自定义组件不继承 Form 的 disabled 上下文,查看模式下仍可编辑。
+**规则**:
+```typescript
+import { DisabledContext } from 'antd/es/config-provider/DisabledContext';
+const disabled = useContext(DisabledContext);
+```
+不通过 props 手传 disabled,让组件自动跟随 Form 上下文。
+
+### #23 Mock 数据必须包含残缺记录
+**触发**:用 Mock 数据开发时。
+**为什么**:"完美"的 Mock 掩盖空字段问题,联调才发现 undefined 崩溃。
+**规则**:Mock 至少包含 1 条"残缺记录"(部分字段为 null/undefined/空字符串),验证空值防御逻辑。
+
+### #24 奖励值等复杂字段需确认格式类型
+**触发**:接收奖励值、配置值等看起来是数字的字段时。
+**为什么**:后端可能用 `{"GLOBAL": "200"}` 对象格式而非 number,前端按 number 处理则回显为空。
+**规则**:联调前先 console.log 打印实际字段类型,不靠字段名推断。
+
+---
+
+## 状态筛选类
+
+### #25 枚举 → 后端状态码映射不能漏值
+**触发**:做列表筛选、状态映射时。
+**为什么**:漏了某个枚举值(如 offline:4)→ 选"已下线"无数据,静默失效。
+**规则**:枚举定义后立即对照后端文档,枚举值全量覆盖,写测试验证所有分支。
+
+### #26 状态展示需统一通过 resolveDisplayStatus 计算
+**触发**:列表中有时间相关的派生状态(如"已结束")时。
+**为什么**:漏了 ended 等派生状态时,已结束任务仍显示"已上线"。
+**规则**:所有状态展示集中走一个 resolve 函数,不在多处分散判断。
+
+---
+
+## 权限系统类
+
+### #27 权限码写完立即 grep 验证拼写
+**触发**:写入权限码字符串常量后。
+**为什么**:拼写错误(如 task-punish 应为 task-publish)导致发布权限检查完全失效。
+**规则**:写完权限码后立即执行 `grep -rn '权限码' src/`,并与后端文档对照。
+
+### #28 权限接口失败时应拒绝访问,不能全放行
+**触发**:设计权限 API 失败时的降级策略。
+**为什么**:空 permissions = 全放行,权限 API 一挂 = 等于无权限系统,高危。
+**规则**:权限 API 失败 → 进入只读模式或显示错误,不能以"兼容"为由全放行。
+
+---
+
+## 部署配置类
+
+### #29 staging 无 Vite proxy 时 API_BASE 要改为完整路径
+**触发**:从本地联调环境部署到 staging 环境时。
+**为什么**:本地用 proxy 不需要写路径前缀,staging 直连后端需要完整路径。
+**规则**:`.env.staging` 和 `.env.production` 的 `VITE_API_BASE` 必须独立配置,不能和本地开发共用。
+
+### #30 dev-only 逻辑泄漏生产是阻塞级问题
+**触发**:Code Review 或上线前检查时。
+**为什么**:测试占位用户、Mock 数据、调试日志进入生产 = 安全漏洞 + 数据污染。
+**规则**:所有 dev-only 代码用 `import.meta.env.DEV` 包裹,CR checklist 必检此项。
+
+---
+
+## 性能优化类
+
+### #31 搜索输入框必须 debounce
+**触发**:为搜索框绑定 onChange 触发 API 请求时。
+**为什么**:每字符触发一次 API = 接口压力 + 用户体验差。
+**规则**:搜索输入 debounce 300-500ms,使用 useDebounce hook 统一处理。
+
+### #32 状态计数接口避免并发 N 次请求
+**触发**:需要获取多状态分别计数时。
+**为什么**:并发 6 个请求拿 6 个状态数量,浪费接口资源。
+**规则**:后端提供一个合并接口,或前端做请求合并,避免并发多次相同接口。
+
+---
+
+## React 编码类
+
+### #33 useState 连续设同值不触发 re-render
+**触发**:需要触发查询刷新时(如点击同一个查询条件)。
+**为什么**:React 的 state bail-out 机制,连续 `setState(sameValue)` 不会 re-render。
+**规则**:用计数器方式触发强制刷新:
+```typescript
+const [queryTrigger, setQueryTrigger] = useState(0);
+// 触发时: setQueryTrigger(t => t + 1)
+```
+
+### #34 项目只使用一种包管理器
+**触发**:项目初始化或添加依赖时。
+**为什么**:同时存在 yarn.lock 和 package-lock.json 会导致依赖版本不一致。
+**规则**:项目开始时确定一种包管理器(yarn/npm/pnpm),删掉其他 lock 文件并写入项目规范。
