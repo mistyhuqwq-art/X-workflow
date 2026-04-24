@@ -188,7 +188,7 @@ SKILL.md 末尾 <!-- budget: p50=..., p90=..., reviewed=... -->
 
 ### 跨模型 / 跨平台适用性
 
-**方法论层(100% 跨模型)**:Phase 门禁、128 条教训、模板、三层经验库流转规则都是纯知识层。换成 GPT / Gemini / Qwen / DeepSeek,只要把 SKILL.md 作为 system prompt 注入就能跑。
+**方法论层(100% 跨模型)**:Phase 门禁、149 条教训、模板、三层经验库流转规则都是纯知识层。换成 GPT / Gemini / Qwen / DeepSeek,只要把 SKILL.md 作为 system prompt 注入就能跑。
 
 **Skill 加载机制(Claude Code 独占)**:`/skill-name` 自动加载、SKILL.md 文件发现、tool_use=Skill 原语属于 Claude Code 平台特性。换到:
 - Cursor → 迁移到 `.cursor/rules/*.mdc`
@@ -249,7 +249,7 @@ workflow-dlc-package/
 │   ├── agent-learning/           # Agent·学习(日志 + 三层经验库)
 │   └── agent-phasing/            # Agent·分期(P0-P3 规划)
 ├── templates/                 # 产出物模板
-├── lessons/                   # 教训库(按角色/环节),128 条教训
+├── lessons/                   # 教训库(按角色/环节),149 条教训
 ├── hooks/                     # ⭐ Claude Code hook 脚本
 │   └── log-skill-tokens.sh    #   Stop hook:自动采集每轮 token 消耗
 ├── experience-base/           # 三层经验库 + 自我观测闭环
