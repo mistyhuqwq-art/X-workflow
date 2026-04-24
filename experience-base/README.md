@@ -74,6 +74,29 @@ raw/token-log.jsonl ──raw-to-patterns.sh──→ patterns/pattern-token-{sk
 ./raw-to-patterns.sh --skill foo      # 只跑单个 skill
 ```
 
+### 自动化观测(Self-Observer)
+
+`self-observer.sh` 每天凌晨自动跑完整闭环:归档昨日 pattern → 跑 raw-to-patterns → 对比环比 → 产出日报。
+
+```bash
+# 手动试跑
+./self-observer.sh
+
+# 安装 macOS 定时任务(每天 02:07 自动跑)
+sed "s|{PROJECT_PATH}|$(realpath ../..)|g" self-observer.launchd.plist > ~/Library/LaunchAgents/com.workflow-dlc.self-observer.plist
+launchctl load ~/Library/LaunchAgents/com.workflow-dlc.self-observer.plist
+launchctl list | grep workflow-dlc
+
+# 日报位置
+ls daily-reports/
+```
+
+日报示例:
+- 🟢 NEW: 新 skill 首次进入 pattern
+- 💚 GOOD: P90 环比 -20% 以上(优化有效)
+- 🟡 WARN: P90 环比 +30% 以上(可能 regression)
+- 💡 SUGGEST: samples ≥ 10 可升级 rule
+
 产出 `patterns/pattern-token-{skill}-{date}.md`,含:
 - P50/P90/P99 output token 分位数(skill 工作量分布)
 - 总成本($)

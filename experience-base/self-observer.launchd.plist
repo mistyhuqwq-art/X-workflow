@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Workflow-DLC Self-Observer · macOS launchd 计划任务
+  =====================================================
+
+  安装步骤(手动一次):
+    1) 根据你的实际路径,替换下面的 {PROJECT_PATH} 为真实绝对路径
+    2) cp self-observer.launchd.plist ~/Library/LaunchAgents/com.workflow-dlc.self-observer.plist
+    3) launchctl load ~/Library/LaunchAgents/com.workflow-dlc.self-observer.plist
+    4) 验证: launchctl list | grep workflow-dlc
+
+  卸载:
+    launchctl unload ~/Library/LaunchAgents/com.workflow-dlc.self-observer.plist
+    rm ~/Library/LaunchAgents/com.workflow-dlc.self-observer.plist
+
+  测试手动触发:
+    launchctl start com.workflow-dlc.self-observer
+
+  触发时间: 每天凌晨 02:07(避开整点,见 /loop 工具的跨用户避撞建议)
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.workflow-dlc.self-observer</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>{PROJECT_PATH}/workflow-dlc-package/experience-base/self-observer.sh</string>
+  </array>
+
+  <!-- 每天 02:07 触发(不走整点避免跨用户撞) -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>2</integer>
+    <key>Minute</key>
+    <integer>7</integer>
+  </dict>
+
+  <!-- 日志输出 -->
+  <key>StandardOutPath</key>
+  <string>/tmp/workflow-dlc-self-observer.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/workflow-dlc-self-observer.err</string>
+
+  <!-- 环境变量(如果 WORKFLOW_DLC_LOG_DIR 需要自定义,在这里设) -->
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+  </dict>
+
+  <!-- 系统休眠后不补跑,避免一次积攒很多任务 -->
+  <key>RunAtLoad</key>
+  <false/>
+</dict>
+</plist>

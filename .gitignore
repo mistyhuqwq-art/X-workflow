@@ -20,3 +20,11 @@ experience-base/patterns/pattern-token-*.md
 
 # 日志
 *.log
+
+# Daily reports - Self-Observer 产出,含本地数据
+experience-base/daily-reports/*.md
+!experience-base/daily-reports/.gitkeep
+
+# Pattern history 归档 - 同样含真实数据
+experience-base/patterns/history/*.md
+!experience-base/patterns/history/.gitkeep

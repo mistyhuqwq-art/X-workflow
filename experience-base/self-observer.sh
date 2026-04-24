@@ -1,0 +1,183 @@
+#!/bin/bash
+# self-observer.sh — workflow-DLC 的自我观测引擎(脚本形态,非 Agent)
+#
+# 为什么是脚本不是 Agent:
+#   每次 cron 调 Claude CLI 烧 token ~20k(session 预热),对定时任务太贵。
+#   用脚本做确定性聚合 + 异常检测,Phase B 再给 LLM 做"异常分析"增值。
+#
+# 运行方式(三选一):
+#   1) 手动试跑: ./self-observer.sh
+#   2) 系统 cron: 0 2 * * * /path/to/self-observer.sh >> /tmp/self-observer.log 2>&1
+#   3) macOS launchd: 见 self-observer.launchd.plist(同目录)
+#
+# Phase A 能力(本版):
+#   - 跑 raw-to-patterns.sh 聚合
+#   - 对比前后两版 pattern,检测 P90 环比 +30% / 新 skill / 升级建议 / idle
+#   - 输出每日报告到 experience-base/daily-reports/YYYY-MM-DD.md
+#   - 零 LLM,零 token 成本
+#
+# Phase B 能力(未实现):
+#   - 异常时调 `claude -p` 用 Haiku 写分析段
+#   - 升级建议时自动产出 PR 式文档
+
+set -uo pipefail
+
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+log_dir="${WORKFLOW_DLC_LOG_DIR:-${script_dir}/raw}"
+log_file="${log_dir}/token-log.jsonl"
+patterns_dir="${script_dir}/patterns"
+reports_dir="${script_dir}/daily-reports"
+history_dir="${patterns_dir}/history"
+
+mkdir -p "$reports_dir" "$history_dir"
+
+today=$(date +%Y-%m-%d)
+now=$(date +%Y-%m-%dT%H:%M:%S%z)
+report_file="${reports_dir}/${today}.md"
+
+# ── 前置检查 ──
+if [ ! -f "$log_file" ]; then
+  echo "⚪ Self-Observer: no token log found at $log_file, skipping"
+  exit 0
+fi
+
+# ── Step 1: 归档昨日的 pattern 到 history(为环比对比) ──
+yesterday_stamp=$(date -v -1d +%Y-%m-%d 2>/dev/null || date -d "yesterday" +%Y-%m-%d 2>/dev/null)
+for f in "$patterns_dir"/pattern-token-*.md; do
+  [ -f "$f" ] || continue
+  basename=$(basename "$f")
+  target="${history_dir}/${basename%.md}-snapshot-${yesterday_stamp}.md"
+  if [ ! -f "$target" ]; then
+    cp "$f" "$target" 2>/dev/null || true
+  fi
+done
+
+# ── Step 2: 跑聚合 ──
+aggregator="${script_dir}/raw-to-patterns.sh"
+if [ ! -x "$aggregator" ]; then
+  echo "❌ Self-Observer: aggregator missing at $aggregator"
+  exit 1
+fi
+
+"$aggregator" > /dev/null 2>&1 || true
+
+# ── Step 3: 遍历新 pattern,对比 history,产出异常列表 ──
+findings=()
+skill_names=()
+
+for new_pattern in "$patterns_dir"/pattern-token-*.md; do
+  [ -f "$new_pattern" ] || continue
+  skill=$(grep '^skill:' "$new_pattern" | head -1 | awk '{print $2}')
+  samples=$(grep '^samples:' "$new_pattern" | head -1 | awk '{print $2}')
+  [ -z "$skill" ] && continue
+  skill_names+=("$skill")
+
+  new_p90=$(awk '/"p90":/ {gsub(/[,"]/,""); print $2; exit}' "$new_pattern")
+
+  # 找最近一次 history 版本对比(非今天的)
+  latest_history=$(ls -t "${history_dir}"/pattern-token-"${skill}"-*-snapshot-*.md 2>/dev/null | head -1)
+  if [ -z "$latest_history" ]; then
+    findings+=("🟢 NEW · ${skill} · 首次进入 pattern(samples=${samples}, P90=${new_p90})")
+    continue
+  fi
+
+  old_p90=$(awk '/"p90":/ {gsub(/[,"]/,""); print $2; exit}' "$latest_history" 2>/dev/null || echo 0)
+
+  if [ -n "$old_p90" ] && [ "$old_p90" -gt 0 ] 2>/dev/null; then
+    pct=$(awk -v new="$new_p90" -v old="$old_p90" 'BEGIN{printf "%.0f", (new-old)/old*100}')
+    if [ "$pct" -gt 30 ] 2>/dev/null; then
+      findings+=("🟡 WARN · ${skill} · P90 环比 +${pct}%(${old_p90} → ${new_p90}),检查是否流程 regression")
+    elif [ "$pct" -lt -20 ] 2>/dev/null; then
+      findings+=("💚 GOOD · ${skill} · P90 环比 ${pct}%(${old_p90} → ${new_p90}),优化有效")
+    fi
+  fi
+
+  # 升级建议
+  if [ "${samples:-0}" -ge 10 ] 2>/dev/null; then
+    findings+=("💡 SUGGEST · ${skill} · samples=${samples} 达阈值,可考虑升级 rule(人工审核)")
+  fi
+done
+
+# ── Step 4: 检测最近 7 天活跃 skill ──
+recent_skills=""
+if command -v jq >/dev/null 2>&1; then
+  seven_days_ago=$(date -v -7d +%s 2>/dev/null || date -d "7 days ago" +%s)
+  recent_skills=$(jq -rs --argjson since "$seven_days_ago" '
+    def normts: sub("\\+\\d{4}$"; "Z") | sub("-\\d{4}$"; "Z");
+    [.[] | select((.timestamp | normts | fromdateiso8601) >= $since) | .skill] | unique | .[]
+  ' "$log_file" 2>/dev/null || echo "")
+fi
+
+# ── Step 5: 写日报 ──
+cat > "$report_file" <<REPORT
+---
+date: ${today}
+generator: self-observer.sh
+generated_at: ${now}
+log_source: ${log_file}
+total_skills_observed: ${#skill_names[@]}
+findings_count: ${#findings[@]}
+---
+
+# Workflow-DLC 自我观测日报 · ${today}
+
+## 今日观测
+
+- **观测 skill 数**: ${#skill_names[@]}
+- **异常 / 建议总数**: ${#findings[@]}
+- **原始日志**: \`${log_file}\`
+
+## 关键发现
+
+REPORT
+
+if [ ${#findings[@]} -eq 0 ]; then
+  echo "✅ 所有 skill 在预期范围,无异常" >> "$report_file"
+else
+  for f in "${findings[@]}"; do
+    echo "- $f" >> "$report_file"
+  done
+fi
+
+cat >> "$report_file" <<REPORT
+
+## 最近 7 天活跃 skill
+
+${recent_skills:-"(无数据或 jq 不可用)"}
+
+## 当前 Patterns 索引
+
+REPORT
+
+for p in "$patterns_dir"/pattern-token-*.md; do
+  [ -f "$p" ] || continue
+  skill=$(grep '^skill:' "$p" | awk '{print $2}')
+  samples=$(grep '^samples:' "$p" | awk '{print $2}')
+  p50=$(awk '/"p50":/ {gsub(/[,"]/,""); print $2; exit}' "$p")
+  p90=$(awk '/"p90":/ {gsub(/[,"]/,""); print $2; exit}' "$p")
+  echo "- **${skill}**: samples=${samples}, P50=${p50}, P90=${p90}" >> "$report_file"
+done
+
+cat >> "$report_file" <<'REPORT'
+
+## 下一步建议(人工)
+
+- 💡 标 SUGGEST 的 skill: 审核 patterns/pattern-token-{skill}.md 是否稳定,稳定则升级到 rules/
+- 🟡 标 WARN 的 skill: 查看对应时间段的 session JSONL,确认 P90 上涨原因
+- 💚 标 GOOD 的 skill: 记录在案,下次复盘可以作为优化样本
+
+---
+
+> Auto-generated by self-observer.sh · daily at cron time
+> Phase A(当前): 纯脚本聚合,零 LLM
+> Phase B(未来): 异常时自动召唤 Haiku 写分析段
+REPORT
+
+# ── Step 6: 控制台总结 ──
+echo "✅ Self-Observer done @ ${now}"
+echo "   Observed: ${#skill_names[@]} skills"
+echo "   Findings: ${#findings[@]}"
+echo "   Report:   ${report_file}"
+for f in "${findings[@]}"; do echo "   $f"; done
+
+exit 0
