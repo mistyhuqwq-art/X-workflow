@@ -18,6 +18,79 @@ raw/ ──AI 清洗(双周)──→ patterns/ ──人工确认(月度)──
 
 **只能向上流动,不能跳级**。AI 不能从原始日志直接改 skill 规则。
 
+## 成本模式(Cost Pattern) —— DLC 自我观测闭环
+
+这是 workflow-dlc 的**第 4 类经验**(前 3 类是教训/模式/规则),专门用来回答:**这个 skill 花了多少 token?值不值?该怎么优化?**
+
+### 数据从哪来
+
+`raw/token-log.jsonl` — 全局 Stop hook 自动追加,每轮对话结束写一行。
+
+**采集机制**:`hooks/log-skill-tokens.sh`(项目根部 `hooks/`,或用户级 `~/.claude/hooks/`)
+- 从当前 session JSONL 倒扫最近的 `Skill` tool_use,关联 skill name(零侵入,不改任何 SKILL.md)
+- 计算本轮(自上次 Stop 以来)的 token 增量,防负值兜底
+- 失败静默,不阻塞 Claude 主流程
+
+**日志行结构**:
+```json
+{
+  "timestamp": "2026-04-24T01:59:43+0800",
+  "session_id": "1c81b800-...",
+  "skill": "pm-retrospective | editorial-page | untracked",
+  "model": "pa/claude-opus-4-7",
+  "turn_delta": {"input_tokens": ..., "output_tokens": ..., "cache_read": ..., "cache_creation": ...},
+  "session_cumulative": { ... }
+}
+```
+
+### 三层流转(和其他经验层一致)
+
+```
+raw/token-log.jsonl ──raw-to-patterns.sh──→ patterns/pattern-token-{skill}.md
+                                                      │
+                                                      ├─ 人工审核(样本 >= 10 + P50/P90 稳定)
+                                                      ↓
+                                             rules/rule-token-{skill}.md
+                                                      │
+                                                      ├─ 反哺
+                                                      ↓
+                              SKILL.md 末尾 <!-- budget: p50=..., p90=... -->
+```
+
+### 日常查询(临时视角,不产出资产)
+
+```bash
+./analyze-tokens.sh by-skill --clean           # 按 skill 聚合
+./analyze-tokens.sh by-skill --clean --since 7d # 近 7 天
+./analyze-tokens.sh cost --clean --since 30d   # 按 ppio 定价估算 $
+./analyze-tokens.sh filter <session_id>        # 单 session 隔离分析
+```
+
+### 产出成本模式(资产视角,升级到 patterns/)
+
+```bash
+./raw-to-patterns.sh                  # 所有样本 >= 3 的 skill
+./raw-to-patterns.sh --min 5          # 自定义门槛
+./raw-to-patterns.sh --skill foo      # 只跑单个 skill
+```
+
+产出 `patterns/pattern-token-{skill}-{date}.md`,含:
+- P50/P90/P99 output token 分位数(skill 工作量分布)
+- 总成本($)
+- 异常点(超 P90 的 run,提示检查 skill 是否失控)
+- 建议 budget(人工审核时的参考值)
+
+### 为什么这是 DLC 的"自我观测闭环"
+
+- **当前状态**:每个 skill 的成本靠感觉("这次好像有点贵?")
+- **经 token 工具后**:skill 的 P50/P90 是个数字,优化前后能对比
+- **经 pattern 升级后**:skill 自己的 budget 有依据地写进 SKILL.md
+- **长期**:skill 执行时能自检 budget 异常,DLC 从"他人观察"进化成"自我观察"
+
+这个链路是 workflow-dlc 区别于"一堆静态 skill 包"的关键 —— 它有**自己的 metrics + 自己的 ceiling**。
+
+---
+
 ## 原始层日志格式
 
 文件名:`YYYY-MM-DD-HHmmss-{session_id}.json`

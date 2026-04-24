@@ -37,6 +37,53 @@ cp -r /path/to/workflow-dlc-package/skills/* .claude/skills/
 cp -r /path/to/workflow-dlc-package/experience-base .claude/workflow-dlc-experience-base
 ```
 
+## 可选:装 Token 观测 hook
+
+装好后,**每轮 Claude Code 对话的 token 消耗都会自动记录**,便于按 skill 聚合分析成本、迭代 DLC 时对比优化前后的效率变化。
+
+### 安装步骤
+
+```bash
+# 1. 复制 hook 脚本到 Claude Code hooks 目录
+mkdir -p ~/.claude/hooks
+cp workflow-dlc-package/hooks/log-skill-tokens.sh ~/.claude/hooks/
+chmod +x ~/.claude/hooks/log-skill-tokens.sh
+
+# 2. 在 ~/.claude/settings.json 的 Stop 钩子数组里追加一条:
+#    {
+#      "type": "command",
+#      "command": "bash ~/.claude/hooks/log-skill-tokens.sh"
+#    }
+#    如果已有其他 Stop hook,追加而不要覆盖。
+```
+
+### 自定义日志位置(可选)
+
+默认日志写在 `~/.claude/workflow-dlc-experience-base/raw/token-log.jsonl`。要放别处,在 shell profile 里设:
+
+```bash
+export WORKFLOW_DLC_LOG_DIR=/path/to/your/project/.claude/workflow-dlc-experience-base/raw
+```
+
+### 查询数据
+
+```bash
+cd workflow-dlc-package/experience-base    # 或你自定义的位置
+./analyze-tokens.sh by-skill --clean --since 7d   # 近 7 天按 skill 聚合
+./analyze-tokens.sh cost --clean --since 30d      # 近 30 天按 skill 估算成本
+./analyze-tokens.sh skills                        # 列出日志出现过的所有 skill
+```
+
+### Hook 与经验库的关系
+
+- `raw/token-log.jsonl` 是原始层数据,Stop 触发时自动追加一行
+- 经"成本模式聚合"可升级到 `patterns/`(见 `experience-base/README.md`)
+- 人工审核后升到 `rules/`,反哺到 skill 的 budget 声明
+
+这条是 workflow-DLC **自我观测闭环**的关键 —— skill 自己的成本由 skill 自己的数据回答。
+
+---
+
 ## 验证安装
 
 ### 方式 A:快速验证(推荐)

@@ -1,6 +1,14 @@
 # Experience base raw logs - 使用时产生的私人日志,不进仓库
 experience-base/raw/*.json
+experience-base/raw/*.jsonl
 !experience-base/raw/.gitkeep
+
+# Patterns - AI 聚合产出的成本模式(含真实 skill 使用数据),不 commit 具体内容
+experience-base/patterns/pattern-token-*.md
+!experience-base/patterns/.gitkeep
+
+# Hook state 文件(若意外出现在工作目录)
+.token-log-state-*.json
 
 # macOS
 .DS_Store

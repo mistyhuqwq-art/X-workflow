@@ -63,6 +63,7 @@ cp -r workflow-dlc/skills/* ~/.claude/skills/
 - 🤝 **用户确认权**:AI 永远给你纠正判断的机会,不搞"越自信越强迫"
 - 🎁 **降级出路**:场景外不拒绝,给模板/跨角色 skill/飞书文档作替代
 - 📊 **自我迭代**:三层经验库(原始→模式→规则),使用越多越准
+- 📈 **Token 观测闭环**:每次 skill 调用自动记录成本,聚合成 P50/P90 反哺 SKILL.md 的 budget,迭代前后**可量化对比**(见下文"自我观测")
 
 ### 详细安装和使用
 
@@ -104,9 +105,11 @@ cp -r workflow-dlc/skills/* ~/.claude/skills/
 | M2 | PM 4 + 前端补 2 | ✅ |
 | M3 后端 + QA | 后端 4 + QA 4 | ✅ |
 | M3 设计师 + Agent | 设计 5 + Agent 4 | ✅ |
+| **M4 · Token 观测闭环** | hook + analyze + raw-to-patterns + budget 反哺 | ✅ 2026-04-24 |
 
 ⏳ 后续(可选):
-- 真实项目验证
+- 真实项目验证 + budget 累积 10+ 样本后升级到 rules
+- skill 执行时自检 budget 异常(从"他人观察"进化成"自我观察")
 - 打包 release 到 `~/.claude/skills/`
 - 使用经验迭代
 
@@ -149,6 +152,63 @@ cp -r workflow-dlc/skills/* ~/.claude/skills/
 原始层(使用日志) → 模式层(AI 汇总) → 规则层(人工确认,写回 skill)
 ```
 
+### 自我观测:Token 成本闭环
+
+workflow-DLC 不只是静态的 skill 包,它**自己观测自己**。
+
+```
+skill 执行 → Stop hook 采集 token 消耗(零用户负担)
+     ↓
+raw/token-log.jsonl(原始层,每轮一行 JSONL)
+     ↓ raw-to-patterns.sh 自动聚合
+patterns/pattern-token-{skill}.md(P50/P90/异常点/成本估算)
+     ↓ 人工审核(样本 ≥ 10 + 两周 P50/P90 变化 < 30%)
+rules/rule-token-{skill}.md
+     ↓ 反哺
+SKILL.md 末尾 <!-- budget: p50=..., p90=..., reviewed=... -->
+```
+
+**这一步解决了什么**:
+- 过去:某 skill 好不好靠感觉 → "这次好像有点慢?"
+- 现在:P50/P90 是个数字 → "pm-retrospective 的 P50 output 从 4145 降到 2800,优化有效"
+
+**零侵入**:hook 从 Claude Code 的 session JSONL 倒扫最近的 `Skill` tool 调用关联 skill name,不用改任何一个 SKILL.md。
+
+**查询命令**:
+```bash
+# 日常查询(临时视角)
+./experience-base/analyze-tokens.sh by-skill --clean --since 7d
+./experience-base/analyze-tokens.sh cost --clean --since 30d
+
+# 产出成本模式(资产视角)
+./experience-base/raw-to-patterns.sh
+```
+
+详见 [experience-base/README.md](./experience-base/README.md#成本模式cost-pattern——dlc-自我观测闭环) 和 [INSTALL.md](./INSTALL.md#可选装-token-观测-hook)。
+
+### 跨模型 / 跨平台适用性
+
+**方法论层(100% 跨模型)**:Phase 门禁、128 条教训、模板、三层经验库流转规则都是纯知识层。换成 GPT / Gemini / Qwen / DeepSeek,只要把 SKILL.md 作为 system prompt 注入就能跑。
+
+**Skill 加载机制(Claude Code 独占)**:`/skill-name` 自动加载、SKILL.md 文件发现、tool_use=Skill 原语属于 Claude Code 平台特性。换到:
+- Cursor → 迁移到 `.cursor/rules/*.mdc`
+- Continue → Custom Commands
+- Cline → `.clinerules`
+- OpenAI/Anthropic API 直接调用 → Prompt Library + function call 手动加载
+
+**Token 观测 hook(部分 Claude 强绑定)**:
+
+| 组件 | 绑定度 |
+|---|---|
+| Stop hook 机制 / JSONL session 结构 | 🔴 Claude Code 独占 |
+| 从 tool_use 反查 skill name | 🔴 Claude Code 独占 |
+| **`analyze-tokens.sh` / `raw-to-patterns.sh` 管道** | ✅ 跨平台 |
+| **`patterns/*.md` / `budget:` 注释机制** | ✅ 跨平台 |
+
+**迁移路径**:上游换掉(用 OpenAI/LiteLLM/LangChain 的 callback 写一份同结构 JSONL)→ 下游分析脚本和成本模式聚合**原样可用**。
+
+**一句话**:方法论通用,采集点看平台,分析层通用。
+
 ## 目录结构
 
 ```
@@ -189,11 +249,15 @@ workflow-dlc-package/
 │   ├── agent-learning/           # Agent·学习(日志 + 三层经验库)
 │   └── agent-phasing/            # Agent·分期(P0-P3 规划)
 ├── templates/                 # 产出物模板
-├── lessons/                   # 教训库(按角色/环节)
-├── experience-base/           # 三层经验库
-│   ├── raw/                   # 原始使用日志
-│   ├── patterns/              # AI 汇总规律
-│   └── rules/                 # 人工确认后的规则
+├── lessons/                   # 教训库(按角色/环节),128 条教训
+├── hooks/                     # ⭐ Claude Code hook 脚本
+│   └── log-skill-tokens.sh    #   Stop hook:自动采集每轮 token 消耗
+├── experience-base/           # 三层经验库 + 自我观测闭环
+│   ├── raw/                   #   原始使用日志 + token-log.jsonl
+│   ├── patterns/              #   AI 汇总规律 + 成本模式
+│   ├── rules/                 #   人工确认后的规则 + 成本 budget
+│   ├── analyze-tokens.sh      #   ⭐ Token 日常查询(by-skill/cost/filter)
+│   └── raw-to-patterns.sh     #   ⭐ raw → 成本模式聚合
 └── examples/                  # 示例项目(待填充)
 ```
 

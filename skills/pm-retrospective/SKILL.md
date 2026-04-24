@@ -213,3 +213,18 @@ grep -c "^### V" path/to/prd.md
   "outcome": "delivered"
 }
 ```
+
+---
+
+<!--
+  Cost budget · 示范结构(由 token 观测闭环反哺;不是硬限制,超了 skill 自检时会提示"检查是否偏离")
+
+  下面的字段在你的机器上会由 experience-base/raw-to-patterns.sh 自动填充,示例如下:
+    数据来源: experience-base/patterns/pattern-token-pm-retrospective-{date}.md
+    budget: p50_output={P50} tokens, p90_output={P90} tokens, samples={N}, reviewed={date}
+    状态: pending | approved
+
+  升级条件: 样本 ≥ 10 + 两周内 P50/P90 变化 < 30% → 升级到 rules/rule-token-pm-retrospective.md
+  反哺路径: SKILL.md 读取时若超 p90 会提示 "检查是否进入未预期的 Phase"
+-->
+
