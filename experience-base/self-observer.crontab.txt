@@ -1,0 +1,23 @@
+# Workflow-DLC Self-Observer · crontab 替代方案
+# =========================================================
+#
+# 如果 launchd 装不上(macOS Full Disk Access 授权问题),用 crontab。
+#
+# 安装步骤:
+#   1) crontab -e
+#   2) 把下面这行粘进去(改成你的真实路径):
+#   3) 保存退出即生效
+#
+# 触发: 每天凌晨 02:07 运行
+#
+# 日志: /tmp/workflow-dlc-self-observer.log
+# ---------------------------------------------------------
+
+7 2 * * * /Users/michellehuu/Projects/docs/workflow-dlc-package/experience-base/self-observer.sh >> /tmp/workflow-dlc-self-observer.log 2>&1
+
+# 要改时间? 把 "7 2" 改成 "分 时"。例如:
+#   30 9 * * 1-5   → 每周一到五早上 9:30
+#   0 */6 * * *    → 每 6 小时一次
+#
+# 查看是否生效: crontab -l
+# 取消: crontab -e 然后删掉上面那行
