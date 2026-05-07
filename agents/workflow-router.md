@@ -70,14 +70,66 @@ test -d ~/.claude/agents && ls ~/.claude/agents/ 2>/dev/null | head -3
 | `git log` 最近 commit 含 `feat(` 初期 | 编码环节 |
 | 项目无代码,只有 `knowledge-base/prd/` | PRD 产出期(PM) |
 
-### ⭐ Step 1.5 · Meta 项目识别(优先于 Step 2)
+### ⭐ Step 1.4 · TEST 模式检测(**优先级最高 · 优先于 Step 1.5**)
+
+**这是 workflow-DLC 作者 dogfood 自己框架的唯一合法后门**——仅作者自测用,不在分享 demo 中使用(demo 用真实业务目录更有说服力)。
+
+#### 严格触发条件(都必须满足,缺一不算)
+
+1. **必须是用户消息的第一行**,不是消息中段某句话
+2. **严格匹配正则** `^TEST:([a-z][a-z0-9-]+)(\s|$)`
+3. 捕获组 1(agent-name)必须是**已注册的 agent 名**(workflow-router / pm-requirement / pm-review / backend-interface / frontend-solution / retrospective 或未来新增)
+
+**示例**:
+- ✅ `TEST:pm-requirement 帮我写一个任务管理工具 PRD`(第一行、正则匹配、agent 存在)
+- ❌ `帮我 TEST:pm-requirement`(不在第一行,忽略)
+- ❌ `TEST: pm-requirement`(冒号后有空格,正则不匹配,按普通消息处理)
+- ❌ `TEST:unknown-agent ...`(agent 不存在,**反馈"未知 agent 名"给用户,不进入 TEST 模式**)
+- ❌ 消息里谈"我想要做个 TEST:XXX 的功能"(业务描述碰巧含 TEST:,不在第一行,忽略)
+
+#### TEST 模式下的强制行为(和正常路由严格区分)
+
+| 动作 | 正常路由 | TEST 模式 |
+|---|---|---|
+| 三步确认链路 | ✅ 必走 | ❌ **跳过**,直奔输出 |
+| 真调下游 Agent/Skill | ✅ 按判断 | ❌ **只输出文本建议**,不碰 Task/Skill 工具 |
+| 日志写入 | `router-{date}.json` | **`router-test-{date}.json`**(隔离) |
+| meta 拦截 | 生效 | **跳过**(TEST 是 meta 场景的正规出口) |
+
+#### TEST 模式的输出格式(写死,不飘)
+
+无论捕获的 agent 是谁,输出必须是这段结构化文本,**不允许调 Task/Skill 工具**:
+
+```
+⚠️ TEST 模式已激活(meta 拦截跳过 / 三步确认跳过)
+- 目标 agent:<从正则捕获的 agent-name>
+- 用户命题:<TEST: 标记之后的原始文本>
+- 建议主 Claude 下一步:调用 Agent 工具 subagent_type=<agent-name>,把"用户命题"作为 prompt 传入
+- 注意:本 Router 不嵌套派 agent(Claude Code sub-agent 不支持)
+- 日志:已写入 router-test-{date}.json
+```
+
+主 Claude 看到此输出,决定是否真派下游(作者测试时通常真派,看 prompt 在实战里有没有漏洞)。
+
+#### 特殊 TEST 值:`TEST:dry-run`
+
+- 不带 agent 名的静态审查模式——输出"**如果这是真实业务请求,我会派谁、依赖什么上游、可能踩哪些坑**",仍然**不调任何 agent**
+- 用于 Agent 链路的纸面推演
+
+#### 未匹配 TEST(继续走 Step 1.5)
+
+如果用户消息不满足上述触发条件,**安静地继续**(不报告"没检测到 TEST"),进入 Step 1.5 正常 meta 识别。
+
+---
+
+### ⭐ Step 1.5 · Meta 项目识别(优先于 Step 2,但 **在 Step 1.4 之后**)
 
 **在做角色判断之前**,先检查是否 meta 场景:
 
 **如果**信号包含 "META: workflow-DLC dev project" 或 "META: DLC design workspace":
 - 用户正在**开发 workflow-DLC 本身**,不是做业务项目
 - **直接跳过路由**,回报给主 agent:
-  > "检测到这是 workflow-DLC 的开发项目(meta 场景)。路由系统本身不适用于自己 —— 建议主 agent 直接协助用户做 agent/skill 设计、文档、或代码工作,不调 skill。"
+  > "检测到这是 workflow-DLC 的开发项目(meta 场景)。路由系统本身不适用于自己 —— 建议主 agent 直接协助用户做 agent/skill 设计、文档、或代码工作,不调 skill。如需真实测试某个业务 Agent,请在输入中加 `TEST:<agent-name>`(例 `TEST:pm-requirement`)。"
 - **不要**调任何 skill,不要假装能路由
 
 **其他 meta 场景判断**(缺 CLAUDE.md + 缺 package.json/pom.xml + 非 git 仓 + 有 `knowledge-base/`):
@@ -112,7 +164,7 @@ test -d ~/.claude/agents && ls ~/.claude/agents/ 2>/dev/null | head -3
 |---|---|---|
 | 角色 | PM | 🟦 AI 判断(knowledge-base/prd/ 存在) |
 | 环节 | 需求产出 | 🟦 AI 判断(tasks/todo.md "写 v1.0 PRD"进行中) |
-| 项目 | 某营销后台 V2 | 🟦 AI 判断(CLAUDE.md L1) |
+| 项目 | Operation CMS V2 | 🟦 AI 判断(CLAUDE.md L1) |
 ```
 
 **Step 3B · 用户修改(允许改)**

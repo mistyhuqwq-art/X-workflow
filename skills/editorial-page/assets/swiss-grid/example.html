@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Quarterly Journal · Volume 3 · The Grid Issue. Swiss Grid 风味示例页。">
+<meta name="color-scheme" content="light only">
+<meta property="og:title" content="Quarterly · Vol. 3 · The Grid Issue">
+<meta property="og:description" content="A periodical on typographic discipline. Swiss Grid example.">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://mistyhuqwq-art.github.io/editorial-page-skill/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mistyhuqwq-art.github.io/editorial-page-skill/og-image.png">
+<title>Quarterly Vol. 3 · Swiss Grid example</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+  :root {
+    --bg: #fff; --text: #000; --text-sub: #222; --text-mid: #444; --text-dim: #999;
+    --accent: #ff1f1f; --line-thin: rgba(0,0,0,0.08); --line-thick: #000;
+    --sans: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0; }
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.5; font-weight: 400; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--text); color: var(--bg); }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 60px 48px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+
+  h1 { font-family: var(--sans); font-size: clamp(48px, 7vw, 80px); font-weight: 900; line-height: 0.95; letter-spacing: -0.035em; text-transform: uppercase; color: var(--text); margin-bottom: 24px; }
+  h1 .k { color: var(--accent); }
+  :lang(zh) h1 { text-transform: none; font-weight: 700; letter-spacing: 0; }
+
+  h2 { font-family: var(--sans); font-size: clamp(32px, 4vw, 44px); font-weight: 900; letter-spacing: -0.025em; text-transform: uppercase; line-height: 1.05; margin-bottom: 10px; }
+  h2 .k { color: var(--accent); }
+  :lang(zh) h2 { text-transform: none; font-weight: 700; letter-spacing: 0; }
+
+  h3 { font-family: var(--sans); font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+
+  .hero { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; padding-bottom: 72px; border-bottom: 2px solid var(--line-thick); margin-bottom: 48px; }
+  .col-num { grid-column: 1 / 3; font-family: var(--mono); font-size: 12px; color: var(--text-mid); font-weight: 500; letter-spacing: 0.04em; padding-top: 8px; }
+  .col-main { grid-column: 3 / 10; }
+  .col-side { grid-column: 10 / 13; font-size: 12px; color: var(--text-sub); line-height: 1.6; border-left: 2px solid var(--line-thick); padding-left: 12px; padding-top: 8px; }
+
+  .sub { font-size: 16px; color: var(--text-sub); max-width: 640px; line-height: 1.55; font-weight: 400; }
+
+  .row { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; padding: 48px 0; border-top: 2px solid var(--line-thick); }
+  .row.no-rule { border-top: none; padding-top: 0; }
+  .row .col-tag { grid-column: 1 / 3; font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--accent); letter-spacing: 0.05em; line-height: 1.4; padding-top: 6px; }
+  .row .col-body { grid-column: 3 / 13; }
+
+  .lead { font-size: 15px; color: var(--text-sub); max-width: 640px; margin: 8px 0 32px; line-height: 1.55; }
+
+  .tbl { width: 100%; border-top: 2px solid var(--line-thick); border-bottom: 2px solid var(--line-thick); font-size: 14px; margin-top: 24px; }
+  .tbl .tr { display: grid; grid-template-columns: 48px 2fr 2fr 2fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line-thin); align-items: baseline; }
+  .tbl .tr:last-child { border-bottom: none; }
+  .tbl .tr .nn { font-family: var(--mono); color: var(--text-dim); font-size: 11px; }
+  .tbl .tr b { font-weight: 700; color: var(--text); }
+  .tbl .tr .acc { color: var(--accent); font-weight: 500; }
+
+  .stats { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 48px 0; border-top: 2px solid var(--line-thick); border-bottom: 2px solid var(--line-thick); margin: 72px 0; }
+  .stats .num { font-family: var(--sans); font-size: clamp(48px, 6vw, 72px); font-weight: 900; line-height: 0.95; letter-spacing: -0.04em; color: var(--text); margin-bottom: 8px; }
+  .stats .num .acc { color: var(--accent); }
+  .stats .label { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.06em; max-width: 200px; line-height: 1.4; }
+
+  .pull-wide { grid-column: 1 / -1; padding: 96px 0; border-top: 2px solid var(--line-thick); border-bottom: 2px solid var(--line-thick); margin: 72px 0; }
+  .pull-wide blockquote { font-family: var(--sans); font-size: clamp(28px, 3.6vw, 40px); font-weight: 300; line-height: 1.2; letter-spacing: -0.025em; max-width: 820px; color: var(--text); }
+  .pull-wide blockquote b { font-weight: 900; color: var(--accent); }
+  .pull-wide cite { display: block; margin-top: 24px; font-family: var(--mono); font-size: 12px; color: var(--text-mid); font-style: normal; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  p { font-size: 15px; color: var(--text-sub); line-height: 1.7; margin-bottom: 18px; max-width: 640px; }
+  p b { color: var(--text); font-weight: 700; }
+
+  .cta-row { grid-column: 1 / -1; display: flex; gap: 0; padding: 48px 0; border-top: 2px solid var(--line-thick); align-items: stretch; }
+  .btn { display: inline-block; padding: 18px 36px; font-family: var(--sans); font-size: 14px; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; border: 0; }
+  :lang(zh) .btn { text-transform: none; letter-spacing: 0; }
+  .btn-primary { background: var(--text); color: var(--bg); border: 2px solid var(--text); }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
+  .btn-ghost { background: var(--bg); color: var(--text); border: 2px solid var(--text); margin-left: -2px; }
+  .btn-ghost:hover { background: var(--text); color: var(--bg); }
+
+  /* 作者痕迹:一处"越栏"(PRINCIPLES 原则 6 打破齐整) */
+  .hang { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 500; font-size: 11px; }
+
+  footer { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; padding: 48px 0; border-top: 2px solid var(--line-thick); font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.05em; }
+  footer .f-l { grid-column: 1 / 7; }
+  footer .f-r { grid-column: 7 / 13; text-align: right; }
+  footer a { color: var(--text); text-decoration: none; border-bottom: 1px solid currentColor; }
+
+  @media (max-width: 720px) {
+    .container { padding: 48px 24px; gap: 12px; }
+    .col-num, .col-main, .col-side, .row .col-tag, .row .col-body, footer .f-l, footer .f-r { grid-column: 1 / -1; }
+    .col-side { border-left: none; border-top: 2px solid var(--line-thick); padding-left: 0; padding-top: 16px; margin-top: 16px; }
+    .stats { grid-template-columns: 1fr; gap: 32px; }
+    .tbl .tr { grid-template-columns: 32px 1fr; gap: 8px; }
+    .tbl .tr > *:nth-child(3), .tbl .tr > *:nth-child(4) { grid-column: 2 / 3; }
+    .cta-row { flex-direction: column; }
+    .btn-ghost { margin-left: 0; margin-top: -2px; }
+    footer .f-r { text-align: left; }
+  }
+
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; } }
+
+  @media print {
+    @page { margin: 20mm 18mm; }
+    body { font-size: 11pt; background: #fff !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .container { display: block; max-width: none; padding: 0; }
+    .row, .hero, .stats, .pull-wide, .cta-row, footer { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; page-break-inside: avoid; }
+    .row { padding: 16pt 0; }
+    .hero { padding-bottom: 20pt; }
+    .stats { grid-template-columns: repeat(3, 1fr); margin: 20pt 0; padding: 20pt 0; }
+    h1, h2, h3 { page-break-after: avoid; }
+    .col-side { border-left-color: #000; }
+    a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; color: #666; }
+    .btn::after { content: ""; }
+    .btn:hover { background: #fff; color: #000; }
+    .btn-primary { background: #000 !important; color: #fff !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ====== Hero ====== -->
+  <div class="hero">
+    <div class="col-num">
+      § 001<br>
+      APR 2026<br>
+      VOL. 3
+    </div>
+    <div class="col-main">
+      <h1>Grid is<br>a <span class="k">way</span> of<br>thinking.</h1>
+      <p class="sub">A quarterly periodical on typographic discipline, layout thinking, and the quiet power of margins that mean something. Issue three takes apart the 12-column system and why it outlives the trends that try to replace it.</p>
+    </div>
+    <div class="col-side">
+      Published in Berlin. Printed on Mohawk Superfine. Set in Inter and JetBrains Mono. 184 pages, perfect bound.
+    </div>
+  </div>
+
+
+  <!-- ====== Row: Four pillars table ====== -->
+  <div class="row no-rule">
+    <div class="col-tag">§ 02<br>THE CORE</div>
+    <div class="col-body">
+      <h2>Four <span class="k">pillars</span></h2>
+      <p class="lead">每根立柱都在网格上找到位置。没有装饰,只有结构。</p>
+      <div class="tbl">
+        <div class="tr"><span class="nn">01</span><b>Modular scale</b><span>1.25 ratio</span><span class="acc">mathematically pure</span></div>
+        <div class="tr"><span class="nn">02</span><b>Grid system</b><span>12 columns</span><span class="acc">fully responsive</span></div>
+        <div class="tr"><span class="nn">03</span><b>Color</b><span>Red · Black · White</span><span class="acc">nothing else</span></div>
+        <div class="tr"><span class="nn">04</span><b>Typography</b><span>One family, four weights</span><span class="acc">discipline</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ====== 数字墙 ====== -->
+  <div class="stats">
+    <div>
+      <div class="num">184</div>
+      <div class="label">PAGES PER ISSUE</div>
+    </div>
+    <div>
+      <div class="num">12<span class="acc">×</span></div>
+      <div class="label">COLUMN GRID, EVERY PAGE</div>
+    </div>
+    <div>
+      <div class="num">2</div>
+      <div class="label">TYPEFACES, NO MORE</div>
+    </div>
+  </div>
+
+
+  <!-- ====== Row: 观点段落 ====== -->
+  <div class="row">
+    <div class="col-tag">§ 03<br>EDITORIAL</div>
+    <div class="col-body">
+      <h2>Why <span class="k">margins</span> matter</h2>
+      <p class="lead">本期社论:为什么在设计里,留白不是"空",而是"意图"。</p>
+      <p><b>A grid is not a cage.</b> 它不是把设计关起来,而是把决定权<b>从直觉移到系统</b>。做完这本期刊的 184 页,我们数过:每一页都遵守同一套 12 栏 + 16px gutter + 1.25 modular scale 的规则。</p>
+      <p>但读者读完后不会说"这期刊有规则"。他们会说"这期刊看起来安静,清晰,能让人读下去"。这是 Müller-Brockmann 1961 年的赌注,也是我们今天的赌注 —— <b>秩序的副产品是清晰,清晰的副产品是可信</b>。</p>
+    </div>
+  </div>
+
+
+  <!-- ====== 大引语 ====== -->
+  <div class="pull-wide">
+    <blockquote>
+      "The grid system is an aid, not a guarantee. It permits a number of possible uses, and each designer can <b>look for a solution appropriate to his personal style</b>. But one must learn how to use the grid; it is an art that requires practice."
+    </blockquote>
+    <cite>— Josef Müller-Brockmann, Grid Systems, 1961</cite>
+  </div>
+
+
+  <!-- ====== Row: 订阅章节 ====== -->
+  <div class="row">
+    <div class="col-tag">§ 04<br>SUBSCRIBE</div>
+    <div class="col-body">
+      <h2>Four issues, <span class="k">one year</span></h2>
+      <p class="lead">四期,一年。寄往 42 个国家。每期 184 页,纸本加数字镜像。</p>
+      <p>EUR 180 / year · 订阅即发当期 + 后续三期。往期单独购买 55 EUR。团体订阅(5 份以上)享 20% 折扣。<span class="hang">shipped from Berlin with <b style="color:var(--accent);font-weight:900;">♥</b></span></p>
+    </div>
+  </div>
+
+
+  <!-- ====== CTA ====== -->
+  <div class="cta-row">
+    <a class="btn btn-primary" href="#">Subscribe</a>
+    <a class="btn btn-ghost" href="#">Read Issue 1 free</a>
+  </div>
+
+
+  <!-- ====== Footer ====== -->
+  <footer>
+    <div class="f-l">QUARTERLY · VOL. 3 · APR 2026 · X &amp; 小克</div>
+    <div class="f-r"><a href="#">archive</a> &nbsp;/&nbsp; <a href="#">masthead</a> &nbsp;/&nbsp; <a href="#">colophon</a></div>
+  </footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Teamspace · 多角色 AI 协作平台项目名片。Warm Editorial 风味示例页 · fx-rich。">
+<meta name="color-scheme" content="light only">
+<meta property="og:title" content="Teamspace — 多角色 AI 协作平台">
+<meta property="og:description" content="多角色 AI 协作平台项目名片。Warm Editorial 示例。">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://mistyhuqwq-art.github.io/editorial-page-skill/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mistyhuqwq-art.github.io/editorial-page-skill/og-image.png">
+<title>Teamspace — 多角色 AI 协作平台 (fx-rich)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;0,8..60,900;1,8..60,400&display=swap');
+
+  :root {
+    --bg: #f5f0e8;
+    --bg-card: #fff;
+    --bg-code: #1a1a2e;
+    --border: rgba(0,0,0,0.08);
+    --text: #1a1a1a;
+    --text-secondary: #6b6560;
+    --text-light: #999080;
+    --accent: #c0542e;
+    --accent-light: rgba(192,84,46,0.08);
+    --serif: 'Source Serif 4', 'Noto Serif SC', 'Georgia', serif;
+    --sans: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 0 80px;
+  }
+
+  .hero-bar {
+    width: 40px;
+    height: 4px;
+    background: var(--accent);
+    margin-bottom: 48px;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(40px, 6vw, 64px);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 24px;
+  }
+  h1 .accent {
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-secondary);
+    font-weight: 300;
+    max-width: 500px;
+    margin-bottom: 64px;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 64px;
+    font-size: 14px;
+    color: var(--text-light);
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+  .hero-meta dt {
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .hero-meta dd {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ---- Sections ---- */
+  section {
+    padding: 80px 0;
+  }
+
+  .section-tag {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-light);
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  h2 .accent { color: var(--accent); }
+
+  .section-lead {
+    font-size: 15px;
+    color: var(--text-secondary);
+    max-width: 560px;
+    margin-bottom: 56px;
+    font-weight: 300;
+  }
+
+  /* ---- Definition List (like PPT) ---- */
+  .def-list {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-bottom: 56px;
+  }
+
+  .def-item {
+    display: flex;
+    gap: 24px;
+    align-items: baseline;
+  }
+
+  .def-label {
+    color: var(--accent);
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 15px;
+    min-width: 56px;
+    flex-shrink: 0;
+  }
+
+  .def-body h3 {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .def-body p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ---- Cards (like PPT's white boxes) ---- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 32px 28px;
+  }
+
+  .card-tag {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .card h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .card p {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+
+  .card-code {
+    background: var(--bg-code);
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin-top: 20px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    color: #c8c8d0;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+  .card-code .comment { color: #5a5a70; }
+  .card-code .keyword { color: var(--accent); }
+
+  /* ---- Table (like PPT's comparison table) ---- */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 40px;
+  }
+
+  .compare-table th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--text-light);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .compare-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .compare-table td:first-child {
+    font-weight: 500;
+    color: var(--text);
+    width: 100px;
+  }
+
+  .compare-table .highlight {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ---- Stats Row ---- */
+  .stats-row {
+    display: flex;
+    gap: 48px;
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  .stats-item .num {
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stats-item .label {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  /* ---- Roles (text-based, no icons) ---- */
+  .roles-row {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-card);
+  }
+
+  .role-col {
+    flex: 1;
+    padding: 28px 20px;
+    border-right: 1px solid var(--border);
+  }
+  .role-col:last-child { border-right: none; }
+
+  .role-col .role-title {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  .role-col .role-color {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  .role-col .role-skills {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ---- Flow Steps ---- */
+  .flow-steps {
+    display: flex;
+    gap: 0;
+    counter-reset: step;
+  }
+
+  .flow-step {
+    flex: 1;
+    padding: 28px 24px;
+    border-right: 1px solid var(--border);
+    counter-increment: step;
+    position: relative;
+  }
+  .flow-step:last-child { border-right: none; }
+
+  .flow-step::before {
+    content: counter(step);
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    opacity: 0.3;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .flow-step h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .flow-step p {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .flow-arrow {
+    position: absolute;
+    right: -6px;
+    top: 36px;
+    color: var(--text-light);
+    font-size: 13px;
+    z-index: 1;
+  }
+
+  /* ---- Stack Grid ---- */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .stack-cell {
+    background: var(--bg-card);
+    padding: 20px 16px;
+  }
+
+  .stack-cell .name {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .stack-cell .role {
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  /* ---- Ending ---- */
+  .ending {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 0;
+  }
+
+  .ending h2 {
+    margin-bottom: 16px;
+  }
+
+  .ending .lead {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+  }
+
+  .ending-url {
+    display: inline-block;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 16px 40px;
+    border: 2px solid var(--accent);
+    border-radius: 4px;
+    transition: all 0.2s;
+    margin-bottom: 20px;
+  }
+  .ending-url:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .ending-note {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 12px;
+  }
+
+  /* ---- Divider ---- */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ---- Footer ---- */
+  footer {
+    padding: 48px 0;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 768px) {
+    .container { padding: 0 24px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .roles-row { flex-direction: column; }
+    .role-col { border-right: none; border-bottom: 1px solid var(--border); }
+    .role-col:last-child { border-bottom: none; }
+    .flow-steps { flex-direction: column; }
+    .flow-step { border-right: none; border-bottom: 1px solid var(--border); }
+    .flow-step:last-child { border-bottom: none; }
+    .flow-arrow { display: none; }
+    .stack-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-row { flex-wrap: wrap; gap: 32px; }
+    .hero-meta { flex-wrap: wrap; gap: 32px; }
+    .compare-table { font-size: 13px; }
+    .card-grid[style*="1fr 1fr"] { grid-template-columns: 1fr !important; }
+  }
+
+  /* ==========================================================
+     表现力开关 · body.fx-rich (warm-editorial 的进入感)
+     ==========================================================
+     核心:不加任何外来色/阴影/发光 —— 只用 warm 本来就有的语言
+     (小红条、accent 色、砖红色系)做"进入感"。保持克制基因。
+     ========================================================== */
+
+  /* 小红条从 0 宽度渐长到 40px */
+  body.fx-rich .hero-bar {
+    animation: fx-warm-bar 0.8s ease-out 0.1s backwards;
+  }
+  @keyframes fx-warm-bar {
+    from { width: 0; }
+    to { width: 40px; }
+  }
+
+  /* Hero h1 渐入 + 极轻微上移 */
+  body.fx-rich h1 {
+    animation: fx-warm-rise 0.7s ease-out 0.25s backwards;
+  }
+  body.fx-rich .hero-sub {
+    animation: fx-warm-rise 0.7s ease-out 0.45s backwards;
+  }
+  body.fx-rich .hero-meta {
+    animation: fx-warm-rise 0.7s ease-out 0.6s backwards;
+  }
+  @keyframes fx-warm-rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 章节小标签微发光(不靠阴影,靠 accent-light 底色) */
+  body.fx-rich .section-tag::before {
+    content: '— ';
+    color: var(--accent);
+    opacity: 0.5;
+  }
+
+  /* accent 关键词 hover 时底部画出 1px 下划线 */
+  body.fx-rich h2 .accent {
+    position: relative;
+    transition: color 0.2s;
+  }
+  body.fx-rich h2 .accent::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  body.fx-rich h2:hover .accent::after {
+    transform: scaleX(1);
+  }
+
+  /* 卡片 hover 时边框颜色加深,极轻微上推(1px) */
+  body.fx-rich .card {
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  body.fx-rich .card:hover {
+    border-color: rgba(0,0,0,0.16);
+    transform: translateY(-1px);
+  }
+
+  /* CTA 按钮 hover 时边框扩散(边框宽度从 2 到 3) */
+  body.fx-rich .ending-url {
+    transition: all 0.2s;
+  }
+  body.fx-rich .ending-url:hover {
+    background: var(--accent);
+    color: #fff;
+    border-width: 3px;
+    padding: 15px 39px; /* 抵消 border 增加导致的布局跳动 */
+  }
+
+  /* reduced motion 下一律关闭动效 */
+  @media (prefers-reduced-motion: reduce) {
+    body.fx-rich .hero-bar,
+    body.fx-rich h1,
+    body.fx-rich .hero-sub,
+    body.fx-rich .hero-meta {
+      animation: none;
+    }
+    body.fx-rich h2 .accent::after,
+    body.fx-rich .card,
+    body.fx-rich .ending-url { transition: none; }
+  }
+</style>
+</head>
+<body class="fx-rich">
+
+<div class="container">
+
+  <!-- ====== Hero ====== -->
+  <section class="hero">
+    <div class="hero-bar"></div>
+    <h1>
+      Teamspace 的<br>
+      <span class="accent">AI Native</span> 协作实践
+    </h1>
+    <p class="hero-sub">
+      把 AI 从聊天助手，变成团队的原生协作者
+    </p>
+    <dl class="hero-meta">
+      <div>
+        <dt>项目</dt>
+        <dd>Teamspace · 多角色 AI 协作平台</dd>
+      </div>
+      <div>
+        <dt>作者</dt>
+        <dd>X 和小克</dd>
+      </div>
+      <div>
+        <dt>日期</dt>
+        <dd>2026-04</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- ====== 核心定义 ====== -->
+  <section>
+    <div class="section-tag">The Core Idea</div>
+    <h2>
+      <span class="accent">共享上下文</span>是协作的基础
+    </h2>
+    <p class="section-lead">
+      不是给每个人配一个 AI 助手——是让 5 个专业 Agent 和人类在同一个空间里工作，
+      共享需求、设计、代码、测试的全部上下文。
+    </p>
+
+    <div class="def-list">
+      <div class="def-item">
+        <span class="def-label">定义</span>
+        <div class="def-body">
+          <h3>AI 是团队成员，不是工具栏按钮</h3>
+          <p>每个 Agent 有专业视角和独立判断，参与讨论、产出文档、追踪进度。人类随时可以打断和纠正。</p>
+        </div>
+      </div>
+      <div class="def-item">
+        <span class="def-label">动因</span>
+        <div class="def-body">
+          <h3>信息碎片化是团队协作的最大成本</h3>
+          <p>需求在飞书、设计在 Figma、代码在 GitLab、测试在 Excel——Teamspace 把它们拉到同一个上下文里。</p>
+        </div>
+      </div>
+      <div class="def-item">
+        <span class="def-label">路径</span>
+        <div class="def-body">
+          <h3>渐进式集成：链接 → 抓取 → 同步</h3>
+          <p>先放链接聚合信息，再自动抓取内容，最终双向同步。不过度工程，每一步都能独立交付价值。</p>
+        </div>
+      </div>
+    </div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th>传统协作</th>
+          <th>Teamspace</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>AI 角色</td>
+          <td>自动补全、问答</td>
+          <td class="highlight">5 个专业 Agent，参与讨论链</td>
+        </tr>
+        <tr>
+          <td>文档</td>
+          <td>面向人类阅读</td>
+          <td class="highlight">面向人 + AI 双重消费</td>
+        </tr>
+        <tr>
+          <td>上下文</td>
+          <td>散落各工具</td>
+          <td class="highlight">统一看板 + 自动注入 Agent</td>
+        </tr>
+        <tr>
+          <td>知识沉淀</td>
+          <td>Wiki / Confluence</td>
+          <td class="highlight">讨论 → 文档 → 看板，自动归档</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ====== 角色 ====== -->
+  <section>
+    <div class="section-tag">AI Agents</div>
+    <h2>五位专属角色，<span class="accent">各司其职</span></h2>
+    <p class="section-lead">
+      每个角色拥有独立的系统提示词和专业知识库，可以互相 @mention 展开多轮讨论。
+    </p>
+
+    <div class="roles-row">
+      <div class="role-col">
+        <div class="role-title"><span class="role-color" style="background:#6366f1"></span>PM Agent</div>
+        <div class="role-skills">需求分析 · PRD 撰写<br>优先级排序 · 竞品调研</div>
+      </div>
+      <div class="role-col">
+        <div class="role-title"><span class="role-color" style="background:#ec4899"></span>Design Agent</div>
+        <div class="role-skills">UI/UX 方案 · 交互设计<br>设计规范 · 无障碍审查</div>
+      </div>
+      <div class="role-col">
+        <div class="role-title"><span class="role-color" style="background:#14b8a6"></span>Frontend Agent</div>
+        <div class="role-skills">React/Next.js · 组件开发<br>样式实现 · API 对接</div>
+      </div>
+      <div class="role-col">
+        <div class="role-title"><span class="role-color" style="background:#f59e0b"></span>Backend Agent</div>
+        <div class="role-skills">API 设计 · 数据建模<br>系统架构 · 安全方案</div>
+      </div>
+      <div class="role-col">
+        <div class="role-title"><span class="role-color" style="background:#ef4444"></span>Tester Agent</div>
+        <div class="role-skills">测试用例 · 自动化测试<br>QA 流程 · 回归验证</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stats-item">
+        <div class="num">5</div>
+        <div class="label">专业 Agent</div>
+      </div>
+      <div class="stats-item">
+        <div class="num">15+</div>
+        <div class="label">React 组件</div>
+      </div>
+      <div class="stats-item">
+        <div class="num">7</div>
+        <div class="label">数据表</div>
+      </div>
+      <div class="stats-item">
+        <div class="num">19.5k</div>
+        <div class="label">行代码（估算）</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 功能模块 ====== -->
+  <section>
+    <div class="section-tag">Capabilities</div>
+    <h2>六大核心能力</h2>
+    <p class="section-lead">从群聊讨论到文档沉淀、代码浏览、进度追踪，覆盖项目全生命周期。</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-tag">群聊</div>
+        <h3>多角色 AI 讨论</h3>
+        <p>Agent 互相 @mention 展开自动讨论（最多 5 轮），流式输出，人类随时打断。系统智能编排参与者。</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">知识</div>
+        <h3>四列资源看板</h3>
+        <p>需求 / 设计 / 开发 / 测试四列看板。Markdown 编辑，文件上传，飞书文档一键导入，自动注入 Agent 上下文。</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">集成</div>
+        <h3>飞书文档读写</h3>
+        <p>Agent 直接读取、追加、创建飞书文档。MCP 协议 + REST API 双通道，文档自动归档到看板。</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">进度</div>
+        <h3>功能流水线</h3>
+        <p>需求 → 设计 → 开发 → 测试 → 完成，五阶段流转。支持优先级标签、拖拽移动、关联文档。</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">代码</div>
+        <h3>仓库浏览器</h3>
+        <p>多仓库管理、Git 浅克隆、文件树浏览、提交历史查看。支持 GitLab MR diff 集成。</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">实时</div>
+        <h3>SSE 事件推送</h3>
+        <p>消息、文档、成员状态全部实时同步。在线指示灯，桌面通知，标题闪烁提醒。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 亮点特色 ====== -->
+  <section>
+    <div class="section-tag">Highlights</div>
+    <h2>几个<span class="accent">值得一看</span>的细节</h2>
+    <p class="section-lead">不止是功能堆砌，这些设计决策让 Teamspace 真正好用。</p>
+
+    <div class="card-grid" style="grid-template-columns: 1fr 1fr">
+      <div class="card">
+        <div class="card-tag">Agent 自主讨论</div>
+        <h3>你发一句，它们聊五轮</h3>
+        <p>PM Agent 分析完需求后 @前端，前端评估完技术方案 @后端确认接口，后端写完又 @测试要测试用例——全自动，最多 5 轮。你觉得跑偏了？发条消息，立刻打断。</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">飞书 Tool Use</div>
+        <h3>Agent 直接操作飞书文档</h3>
+        <p>不是"帮你生成一段文字让你自己粘贴"。是 Agent 自己打开飞书文档、读取内容、追加结论、甚至新建一份技术方案——然后自动把链接归档到看板。</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">智能上下文</div>
+        <h3>50 条消息后自动摘要</h3>
+        <p>对话太长 Agent 会变慢变笨？不会。超过 50 条时系统自动把旧消息压缩成结构化摘要，Agent 始终在"摘要 + 最近 20 条"上工作，又快又准。</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">零门槛接入</div>
+        <h3>局域网打开就能用</h3>
+        <p>没有注册登录，没有复杂配置。同一个 WiFi 下，浏览器输入 IP 地址，起个名字选个角色，3 秒进入项目空间。SQLite 零运维，开箱即用。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ====== Agent 协作流程 ====== -->
+  <section>
+    <div class="section-tag">How It Works</div>
+    <h2>Agent 协作流程</h2>
+    <p class="section-lead">一条消息触发完整的 AI 协作链。</p>
+
+    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:4px; overflow:hidden;">
+      <div class="flow-steps">
+        <div class="flow-step">
+          <h4>人类发言</h4>
+          <p>输入问题或指令，自动打断进行中的 Agent 讨论</p>
+          <span class="flow-arrow">→</span>
+        </div>
+        <div class="flow-step">
+          <h4>智能编排</h4>
+          <p>系统判断哪些 Agent 应当参与本轮回复</p>
+          <span class="flow-arrow">→</span>
+        </div>
+        <div class="flow-step">
+          <h4>多轮讨论</h4>
+          <p>Agent 互相 @mention，最多 5 轮自动对话</p>
+          <span class="flow-arrow">→</span>
+        </div>
+        <div class="flow-step">
+          <h4>工具调用</h4>
+          <p>按需读写飞书文档、查询代码仓库</p>
+          <span class="flow-arrow">→</span>
+        </div>
+        <div class="flow-step">
+          <h4>结果沉淀</h4>
+          <p>结论自动归档到资源看板和飞书文档</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 技术栈 ====== -->
+  <section>
+    <div class="section-tag">Tech Stack</div>
+    <h2>技术选型</h2>
+    <p class="section-lead">全栈 TypeScript，零运维数据库，现代 AI 能力。</p>
+
+    <div class="stack-grid">
+      <div class="stack-cell">
+        <div class="name">Next.js 15</div>
+        <div class="role">全栈框架 · App Router</div>
+      </div>
+      <div class="stack-cell">
+        <div class="name">React 19</div>
+        <div class="role">UI 层 · Server Components</div>
+      </div>
+      <div class="stack-cell">
+        <div class="name">Tailwind CSS v4</div>
+        <div class="role">原子化样式</div>
+      </div>
+      <div class="stack-cell">
+        <div class="name">SQLite + WAL</div>
+        <div class="role">零运维嵌入式数据库</div>
+      </div>
+      <div class="stack-cell">
+        <div class="name">Claude SDK</div>
+        <div class="role">AI 引擎 · Tool Use</div>
+      </div>
+      <div class="stack-cell">
+        <div class="name">SSE</div>
+        <div class="role">实时事件推送</div>
+      </div>
+      <div class="stack-cell">
+        <div class="name">Zustand</div>
+        <div class="role">客户端状态管理</div>
+      </div>
+      <div class="stack-cell">
+        <div class="name">MCP Protocol</div>
+        <div class="role">飞书文档集成</div>
+      </div>
+    </div>
+
+    <div class="card-grid" style="margin-top: 20px">
+      <div class="card" style="background: var(--bg-code); border-color: transparent;">
+        <div class="card-tag" style="color: #e8a87c">数据模型</div>
+        <div class="card-code">
+          <span class="comment"># 7 张核心表</span><br>
+          projects<br>
+          members<br>
+          messages<br>
+          documents<br>
+          features<br>
+          activities<br>
+          project_repos
+        </div>
+      </div>
+      <div class="card" style="background: var(--bg-code); border-color: transparent;">
+        <div class="card-tag" style="color: #e8a87c">API 结构</div>
+        <div class="card-code">
+          <span class="comment"># RESTful + SSE</span><br>
+          /api/projects/*<br>
+          /api/projects/[id]/messages<br>
+          /api/projects/[id]/stream<br>
+          /api/projects/[id]/docs<br>
+          /api/projects/[id]/features<br>
+          /api/feishu/*<br>
+          /api/repo/*
+        </div>
+      </div>
+      <div class="card" style="background: var(--bg-code); border-color: transparent;">
+        <div class="card-tag" style="color: #e8a87c">核心组件</div>
+        <div class="card-code">
+          <span class="comment"># 15+ React 组件</span><br>
+          ChatWindow<br>
+          KnowledgeBoard<br>
+          FeaturePipeline<br>
+          RepoExplorer<br>
+          SearchPanel<br>
+          DocEditor<br>
+          MessageBubble
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ====== Roadmap ====== -->
+  <section>
+    <div class="section-tag">Roadmap</div>
+    <h2>下一步，<span class="accent">往哪走</span></h2>
+    <p class="section-lead">MVP 已跑通核心链路，接下来让它变成真正好用的团队工具。</p>
+
+    <div class="card-grid" style="grid-template-columns: 1fr 1fr">
+      <div class="card">
+        <div class="card-tag">Agent 进化</div>
+        <h3>个人 Agent · 自定义角色</h3>
+        <p>打破 5 个固定角色。每人绑定自己的 Agent——起名、调 prompt、选专业领域。基于模板创建，越用越懂你。四阶段渐进：认领 → 个性化 → 模板商店 → 长期记忆。</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">基础设施</div>
+        <h3>用户认证 · 飞书 SSO</h3>
+        <p>当前靠 localStorage 存身份，换设备就丢。接入飞书 SSO 后一个账号多端同步，也为权限控制和操作审计打基础。</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">协作增强</div>
+        <h3>讨论导出 · 通知中心</h3>
+        <p>讨论记录一键导出 Markdown 或飞书文档。站内通知中心替代纯浏览器通知，未读消息不再漏掉。</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">体验</div>
+        <h3>移动端适配 · 文档协同</h3>
+        <p>响应式布局让手机也能参与讨论。资料库文档从单人覆盖升级为多人协同编辑，不再互相踩。</p>
+      </div>
+      <div class="card" style="grid-column: 1 / -1; border-color: rgba(192,84,46,0.15); background: linear-gradient(135deg, var(--bg-card), rgba(192,84,46,0.02))">
+        <div class="card-tag">闭环提效</div>
+        <h3>Demo 浏览器 · 需求即见即评</h3>
+        <p>需求确定后，Frontend Agent 实时构建原型 Demo，直接嵌入右侧预览窗口。在 Demo 旁边圈选元素、留下评论、提出修改意见，Agent 实时响应并迭代。设计评审、交互验收、需求对齐不再靠截图转发——讨论 / 原型 / 反馈在同一屏内闭环。</p>
+      </div>
+      <div class="card" style="grid-column: 1 / -1; border-color: rgba(192,84,46,0.2); background: linear-gradient(135deg, var(--bg-card), rgba(192,84,46,0.03))">
+        <div class="card-tag">远期愿景</div>
+        <h3>AI Pet · 你的 Agent 不只是工具，是伙伴</h3>
+        <p>给你的 Agent 一个形象——换皮肤、加表情包、养成个性。用得越久越有默契，看得越久越有感情。它带着你的记忆、偏好和专业判断，在你不在的时候替你参与讨论、review 方案。最终每个人的 Agent，就是自己在数字世界的映射。</p>
+      </div>
+    </div>
+
+    <table class="compare-table" style="margin-top: 40px">
+      <thead>
+        <tr>
+          <th>方向</th>
+          <th>状态</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>核心协作</td>
+          <td>已完成</td>
+          <td>群聊 + 资料库 + 进度看板 + 搜索</td>
+        </tr>
+        <tr>
+          <td>Agent 自主通信</td>
+          <td>已完成</td>
+          <td>5 轮自动链 + 人类随时打断</td>
+        </tr>
+        <tr>
+          <td>飞书 Tool Use</td>
+          <td>已完成</td>
+          <td>读 / 写 / 建文档 + 自动归档</td>
+        </tr>
+        <tr>
+          <td>实时协同</td>
+          <td>已完成</td>
+          <td>SSE 推送 + 在线状态 + 桌面通知</td>
+        </tr>
+        <tr>
+          <td>个人 Agent</td>
+          <td class="highlight">规划中</td>
+          <td class="highlight">模板 → 个性化 → 商店 → 记忆</td>
+        </tr>
+        <tr>
+          <td>用户认证</td>
+          <td class="highlight">规划中</td>
+          <td class="highlight">飞书 SSO + 多端同步</td>
+        </tr>
+        <tr>
+          <td>导出 / 通知</td>
+          <td class="highlight">规划中</td>
+          <td class="highlight">Markdown 导出 + 站内通知中心</td>
+        </tr>
+        <tr>
+          <td>移动端 / 协同编辑</td>
+          <td class="highlight">规划中</td>
+          <td class="highlight">响应式布局 + 多人文档编辑</td>
+        </tr>
+        <tr>
+          <td>Demo 浏览器</td>
+          <td class="highlight">规划中</td>
+          <td class="highlight">原型实时预览 + 圈选评论 + Agent 迭代</td>
+        </tr>
+        <tr>
+          <td>AI Pet</td>
+          <td class="highlight">远期</td>
+          <td class="highlight">Agent 形象 · 皮肤 · 表情包 · 商业化</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ====== 体验入口 ====== -->
+  <section class="ending">
+    <div class="hero-bar" style="margin: 0 auto 48px"></div>
+    <h2>来<span class="accent">体验</span>一下</h2>
+    <p class="lead">在浏览器地址栏输入以下地址，即可打开 Teamspace</p>
+    <a class="ending-url" href="http://10.189.84.104:3000" target="_blank">10.189.84.104:3000</a>
+    <p class="ending-note">仅限北京办公区内网访问</p>
+  </section>
+
+  <!-- ====== Footer ====== -->
+  <footer>
+    Teamspace · Built by X 和小克 · 2025
+  </footer>
+
+</div>
+
+</body>
+</html>

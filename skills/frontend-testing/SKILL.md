@@ -71,19 +71,32 @@ description: 前端测试 skill。编码完成后,引导前端设计测试策略
 **Layer 4(异常边界,验 6 类)**:
 - 网络异常 / 权限 / 数据 / 并发 / 极值 / 兼容
 
+**Layer 5(核心用户旅程,验完整操作闭环)** ⭐ 新增:
+- 每个核心业务动作(创建/编辑/删除/审批/状态流转)至少 1 条
+- **全部通过 UI 交互**,不用 `page.goto()` 跳到中间步骤
+- **不 mock 网络**（或只 mock 第三方依赖），真实走后端
+- **验证最终状态**而非中间产物（列表页出现新记录,不只是 POST 发出去了）
+- **覆盖状态转换**:操作前→操作中(Loading)→操作后,每个阶段都断言
+- **必须包含"第二次操作"**:创建完一个→再创建第二个,验证表单清空/状态重置
+
+> Layer 5 解决的问题:Layer 1-4 全绿但人类手动走核心流程还有 bug。原因是 Layer 3 直接发请求验 payload,跳过了 UI 交互链——按钮点不动、异步下拉没加载、二次操作状态残留这类问题只有 Layer 5 能发现。
+
 ### 1.2 优先级
 
 | 优先级 | 何时写 | 放弃成本 |
 |---|---|---|
+| P0 Layer 5(用户旅程) | 必写,最先写 | 放弃 = 人类走一遍就发现 bug,AI 测试形同虚设 |
 | P0 Layer 3(数据流) | 必写,coding 后就写 | 放弃 = 上线出字段 bug |
 | P1 Layer 1(核心页面) | 必写 | 放弃 = 基础回归无保障 |
 | P2 Layer 4(核心边界) | 建议写 | 放弃 = 上线后客诉集中 |
 | P3 Layer 2 / Layer 4(非核心) | 有空再写 | 可接受 |
 
 **🚧 Phase 1 门禁**:
-- ✅ 4 层都有明确数量预估
+- ✅ 5 层都有明确数量预估
+- ✅ Layer 5 至少覆盖每个核心写链路（创建/编辑/删除）
 - ✅ Layer 3 至少覆盖核心增删改查
-- ❌ 只写 Layer 1 就说"测试做完了" → 拒绝,必须有 Layer 3
+- ❌ 只写 Layer 1 就说"测试做完了" → 拒绝,必须有 Layer 5 + Layer 3
+- ❌ Layer 5 用了 page.goto 跳到中间步骤 → 拒绝,必须从真实入口操作
 
 ## Phase 2:用例产出
 
@@ -138,10 +151,68 @@ test('网络异常时展示兜底', async ({ page }) => {
 });
 ```
 
-### 2.4 用例组织
+### 2.4 Layer 5 示例(核心用户旅程) ⭐
+
+```typescript
+test('完整创建任务旅程:从列表页到创建成功', async ({ page }) => {
+  // 从真实入口开始,不跳步
+  await page.goto('/tasks');
+  await expect(page.getByRole('table')).toBeVisible();
+
+  // 记录创建前的行数
+  const rowsBefore = await page.getByRole('row').count();
+
+  // 点击新建按钮(不是直接 goto /tasks/new)
+  await page.getByRole('button', { name: /新建/ }).click();
+
+  // 等待表单页/弹窗加载完毕
+  await expect(page.getByRole('form')).toBeVisible();
+
+  // 填写表单(含异步下拉:选类型后触发加载子选项)
+  await page.getByLabel('任务名称').fill('旅程测试任务');
+  await page.getByLabel('任务类型').click();
+  await page.getByRole('option', { name: '日常任务' }).click();
+
+  // 等异步加载的子字段出现
+  await expect(page.getByLabel('执行频率')).toBeVisible();
+  await page.getByLabel('执行频率').selectOption('DAILY');
+
+  // 提交
+  await page.getByRole('button', { name: /提交|保存/ }).click();
+
+  // 验证 Loading → 成功
+  await expect(page.getByText(/提交中|保存中/)).toBeVisible();
+  await expect(page.getByText(/成功/)).toBeVisible({ timeout: 10000 });
+
+  // 验证回到列表且新记录存在
+  await expect(page.getByRole('table')).toBeVisible();
+  await expect(page.getByRole('row')).toHaveCount(rowsBefore + 1);
+  await expect(page.getByText('旅程测试任务')).toBeVisible();
+});
+
+test('第二次创建:验证表单状态重置', async ({ page }) => {
+  await page.goto('/tasks');
+  
+  // 第一次创建
+  await page.getByRole('button', { name: /新建/ }).click();
+  await page.getByLabel('任务名称').fill('第一个任务');
+  await page.getByRole('button', { name: /提交/ }).click();
+  await expect(page.getByText(/成功/)).toBeVisible({ timeout: 10000 });
+
+  // 第二次创建:验证表单清空
+  await page.getByRole('button', { name: /新建/ }).click();
+  await expect(page.getByLabel('任务名称')).toHaveValue('');  // 不能残留上次的值
+});
+```
+
+### 2.5 用例组织
 
 ```
 e2e/
+├── layer5-journeys/        # 核心用户旅程(最先写,P0)
+│   ├── create-task.spec.ts
+│   ├── edit-task.spec.ts
+│   └── delete-task.spec.ts
 ├── layer1-ui/              # UI 存在性
 │   ├── tasks.spec.ts
 │   └── users.spec.ts
@@ -154,10 +225,12 @@ e2e/
 ```
 
 **🚧 Phase 2 门禁**:
-- ✅ 4 层用例都有产出(不是只做 Layer 1)
+- ✅ 5 层用例都有产出(不是只做 Layer 1)
+- ✅ Layer 5 用例全部通过 UI 交互完成,不跳步,验证最终状态
 - ✅ Layer 3 用例真的拦截了 request 验 payload
 - ✅ 本地 `npx playwright test` 全绿
 - ❌ "测试过了,一半绿就行" → 拒绝,必须 100% 绿
+- ❌ Layer 5 用 page.goto 跳到表单页 → 拒绝,必须从列表页点按钮进入
 
 ## Phase 3:覆盖率核对
 
@@ -202,6 +275,61 @@ e2e/
 - 联调 + 测试都通过 → 调用 `frontend-retrospective` 进入复盘
 - 有新测试发现的 bug → 回 `frontend-coding` 修复并加 Layer 2 回归
 
+## 测试数据多样化（Test Data Factory）
+
+> 每次测试都填相同的"测试数据001"= 只验证了一种输入路径。真实用户输入多样，测试数据也必须多样。
+
+### 必须实现 `test-data-factory.ts`
+
+每个项目的 `e2e/utils/` 下必须有数据工厂，满足以下要求：
+
+**1. 随机化**：每次运行生成不同数据，覆盖不同长度、字符类型、配置组合
+**2. 边界覆盖**：
+- 名称：中文/英文/混合/含特殊字符/极短(1字)/极长(接近上限)
+- 数值：最小值/最大值/常见值/零/小数
+- 多选字段：单选/多选/全选
+- 可选字段：30% 概率不填（测空态提交）
+
+**3. 唯一性**：名称加时间戳后缀避免重复冲突
+**4. 类型安全**：每个生成函数返回明确的 interface
+
+### 数据工厂模板
+
+```typescript
+// e2e/utils/test-data-factory.ts
+
+function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function randomName(prefix: string, minLen = 3, maxLen = 15): string {
+  // 随机生成中文/英文/混合名称 + 时间戳后缀保证唯一
+  const body = /* 随机字符 */;
+  return `${prefix}-${body}-${Date.now().toString(36)}`;
+}
+
+export interface XxxTestData {
+  name: string;
+  // ...按业务字段定义
+}
+
+export function generateXxxData(): XxxTestData {
+  return {
+    name: randomName('前缀', 2, 12),
+    // ...每个字段都用随机生成器
+  };
+}
+```
+
+### 门禁检查
+
+- ✅ Layer 5 用例使用数据工厂生成输入，不硬编码"测试数据"
+- ❌ 所有用例填同一份固定数据 → 拒绝
+
 ## 常见卡点
 
 | 卡点 | 做法 |
@@ -210,6 +338,7 @@ e2e/
 | Mock 和真实不一致 | 用 page.route 做 mock,和生产一致的 response 结构 |
 | 测试太慢 | 并行跑 workers、只跑 changed files、Layer 1 和 Layer 3 拆开执行 |
 | CI 不稳定 | headless 模式 + retry: 1 + trace on-failure |
+| 测试数据固定导致偶发通过 | 用 test-data-factory 随机化输入,每次运行不同组合 |
 
 ## 写入日志
 

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="{{PAGE_DESCRIPTION}}">
+<meta name="color-scheme" content="light only">
+<meta property="og:title" content="{{PAGE_TITLE}}">
+<meta property="og:description" content="{{PAGE_DESCRIPTION}}">
+<title>{{PAGE_TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+  :root {
+    --bg:         #ffffff;
+    --text:       #000000;
+    --text-sub:   #333333;
+    --text-mid:   #666666;
+    --text-dim:   #999999;
+    --line:       #cccccc;
+    --line-heavy: #000000;
+    --bg-code:    #f5f5f5;
+
+    --sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 400;
+  }
+  ::selection { background: var(--text); color: var(--bg); }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 64px 48px;
+    position: relative;
+  }
+  /* 可选:书脊式左引导线 */
+  .container::before {
+    content: '';
+    position: absolute;
+    left: 48px; top: 120px; bottom: 96px;
+    width: 1px;
+    background: var(--text);
+    opacity: 0.06;
+  }
+
+  /* ---- Meta row(Mono 元信息) ---- */
+  .meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 48px;
+    display: flex; gap: 24px; flex-wrap: wrap;
+  }
+  .meta span::before { content: '/ '; color: #bbb; }
+  .meta span:first-child::before { content: ''; }
+
+  /* ---- Hero ---- */
+  .hero { padding: 56px 0 48px; }
+  h1 {
+    font-family: var(--sans);
+    font-size: clamp(40px, 6vw, 56px);
+    font-weight: 300;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: var(--text);
+    margin-bottom: 28px;
+  }
+  h1 b { font-weight: 900; }  /* 粗细断崖 */
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--text-sub);
+    max-width: 540px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  /* ---- Section ---- */
+  section { padding: 48px 0; }
+
+  /* 实线分隔 - 强章节开场 */
+  .rule {
+    border-top: 1px solid var(--text);
+    padding-top: 32px;
+    margin-top: 32px;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .tag::before { content: '# '; color: var(--text-dim); }
+
+  h2 {
+    font-family: var(--sans);
+    font-size: clamp(24px, 3.2vw, 30px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  h2 b { font-weight: 900; }
+
+  .lead {
+    font-size: 14.5px;
+    color: var(--text-mid);
+    margin-bottom: 32px;
+    max-width: 580px;
+  }
+
+  /* ---- 编号列表(替代卡片网格)---- */
+  .list {
+    list-style: none;
+    padding: 0;
+  }
+  .list li {
+    padding: 14px 0;
+    border-top: 1px dashed var(--line);
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 16px;
+    align-items: baseline;
+  }
+  .list li:last-child {
+    border-bottom: 1px dashed var(--line);
+  }
+  .list .n {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .list .body {
+    font-size: 14.5px;
+    color: var(--text-sub);
+    line-height: 1.65;
+  }
+  .list .body b {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  /* ---- 提拉引用 ---- */
+  .pull {
+    padding: 40px 0 40px 72px;
+    font-size: clamp(19px, 2.4vw, 24px);
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    max-width: 620px;
+    position: relative;
+  }
+  .pull::before {
+    content: '"';
+    position: absolute;
+    left: 24px; top: 24px;
+    font-size: 64px;
+    color: var(--text-dim);
+    font-weight: 300;
+    line-height: 1;
+  }
+  .pull cite {
+    display: block;
+    margin-top: 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    font-style: normal;
+  }
+
+  /* ---- Blockquote(左边线引用)---- */
+  blockquote {
+    border-left: 3px solid var(--text);
+    padding-left: 20px;
+    margin: 24px 0;
+    font-size: 15px;
+    color: var(--text-sub);
+  }
+
+  /* ---- 代码块 ---- */
+  .code-block {
+    background: var(--bg-code);
+    padding: 18px 20px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 24px 0;
+  }
+  .code-block .cmt { color: var(--text-dim); }
+
+  /* ---- 脚注 ---- */
+  .footnotes {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px dashed var(--line);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.8;
+  }
+  .footnotes p { margin-bottom: 6px; }
+  .fn { color: var(--text-dim); }
+
+  /* ---- CTA row ---- */
+  .cta-row {
+    display: flex; gap: 16px; flex-wrap: wrap; align-items: baseline;
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px dashed var(--line);
+  }
+  .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid var(--text);
+    color: var(--text);
+    background: var(--bg);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--sans);
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn:hover {
+    background: var(--text);
+    color: var(--bg);
+  }
+
+  /* ---- Footer ---- */
+  footer {
+    margin-top: 72px;
+    padding-top: 28px;
+    border-top: 1px solid var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-mid);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer a {
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 640px) {
+    .container { padding: 48px 28px; }
+    .container::before { left: 28px; }
+    .pull { padding: 28px 0 28px 44px; }
+    .pull::before { left: 4px; top: 16px; font-size: 44px; }
+    .list li { grid-template-columns: 28px 1fr; gap: 12px; }
+  }
+
+  /* ---- a11y ---- */
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0.01ms !important; }
+  }
+
+  /* ---- Print(天然贴合打印)---- */
+  @media print {
+    @page { margin: 20mm 18mm; }
+    body { font-size: 11pt; background: #fff !important; color: #000 !important; }
+    .container { max-width: none; padding: 0; }
+    .container::before { display: none; }
+    .hero { padding: 0 0 24pt; page-break-after: avoid; }
+    section { padding: 18pt 0; page-break-inside: avoid; }
+    .list li, .pull, .rule, .code-block { page-break-inside: avoid; }
+    h1, h2, h3 { page-break-after: avoid; }
+    a[href^="http"]::after {
+      content: " [" attr(href) "]";
+      font-family: var(--mono);
+      font-size: 0.82em;
+      color: #666;
+    }
+    .btn::after { content: ''; }
+    .btn:hover { background: #fff; color: #000; }
+    .cta-row { border-color: #999; }
+    footer { border-color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ====== Meta 行 ====== -->
+  <div class="meta">
+    <span>{{META_1}}</span>
+    <span>{{META_2}}</span>
+    <span>{{META_3}}</span>
+  </div>
+
+
+  <!-- ====== Hero ====== -->
+  <section class="hero">
+    <h1>{{HERO_LINE_1_PREFIX}} <b>{{HERO_BOLD_1}}</b> {{HERO_LINE_1_MID}} <b>{{HERO_BOLD_2}}</b>{{HERO_LINE_1_SUFFIX}}</h1>
+    <p class="hero-sub">{{HERO_SUB}}</p>
+  </section>
+
+
+  <!-- ====== 核心原则 / 编号列表章节 ====== -->
+  <section>
+    <div class="rule">
+      <div class="tag">{{SECTION_TAG_1}}</div>
+      <h2>{{H2_1_PREFIX}}<b>{{H2_1_BOLD}}</b>{{H2_1_SUFFIX}}</h2>
+      <p class="lead">{{LEAD_1}}</p>
+
+      <ul class="list">
+        <li>
+          <span class="n">01</span>
+          <span class="body"><b>{{LIST_1_TITLE}}</b> {{LIST_1_BODY}}</span>
+        </li>
+        <li>
+          <span class="n">02</span>
+          <span class="body"><b>{{LIST_2_TITLE}}</b> {{LIST_2_BODY}}</span>
+        </li>
+        <li>
+          <span class="n">03</span>
+          <span class="body"><b>{{LIST_3_TITLE}}</b> {{LIST_3_BODY}}</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+
+  <!-- ====== 提拉引用 ====== -->
+  <section>
+    <blockquote class="pull">
+      {{PULL_QUOTE}}
+      <cite>— {{PULL_CITE}}</cite>
+    </blockquote>
+  </section>
+
+
+  <!-- ====== 代码块(可选)====== -->
+  <section>
+    <div class="rule">
+      <div class="tag">{{SECTION_TAG_2}}</div>
+      <h2>{{H2_2_PREFIX}}<b>{{H2_2_BOLD}}</b>{{H2_2_SUFFIX}}</h2>
+      <p class="lead">{{LEAD_2}}</p>
+
+      <div class="code-block">
+<span class="cmt">{{CODE_COMMENT_1}}</span>
+{{CODE_LINE_1}}
+
+<span class="cmt">{{CODE_COMMENT_2}}</span>
+{{CODE_LINE_2}}
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ====== CTA ====== -->
+  <section>
+    <div class="cta-row">
+      <a class="btn" href="{{CTA_URL_1}}">{{CTA_TEXT_1}}</a>
+      <a class="btn" href="{{CTA_URL_2}}">{{CTA_TEXT_2}}</a>
+    </div>
+  </section>
+
+
+  <!-- ====== 脚注 ====== -->
+  <div class="footnotes">
+    <p><span class="fn">[1]</span> {{FOOTNOTE_1}}</p>
+    <p><span class="fn">[2]</span> {{FOOTNOTE_2}}</p>
+  </div>
+
+
+  <!-- ====== Footer ====== -->
+  <footer>
+    <div>{{FOOTER_LEFT}}</div>
+    <div>{{FOOTER_RIGHT}}</div>
+  </footer>
+
+</div>
+
+</body>
+</html>
