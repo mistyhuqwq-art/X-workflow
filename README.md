@@ -1,8 +1,8 @@
 # Workflow-DLC
 
-> **Workflow-DLC** (Workflow Development Life Cycle) —— 为 Claude Code 用户打造的**角色驱动 Skill 框架**,由 1 个入口 skill + 1 个通用对话 skill + 26 个角色环节 skill 组成,**共 28 个 Skill 协同工作**。
+> **Workflow-DLC** (Workflow Development Life Cycle) —— AI 驱动的研发全流程编排系统。**29 个 Skill + 11 个 Agent** 协同工作,覆盖从需求澄清到验收上线的完整生命周期。
 >
-> 装到 `~/.claude/skills/` 即用,选角色 → 自动定位环节 → 引导完成工作。
+> 一个对话跑完全流程。编排器持续追踪 11 个门禁节点,按用户意图派遣 5 个角色 Agent（PM/设计/前端/后端/QA）,每个环节自动质量审查后交付确认。
 
 ## 🆔 术语说明
 
@@ -58,12 +58,14 @@ cp -r workflow-dlc/skills/* ~/.claude/skills/
 
 ### 核心亮点
 
-- ✅ **6 角色 × 28 skill** 全闭环覆盖,不是只给前端/PM
-- 🚧 **门禁机制**:每个 Phase 有明确通过标准,不过闸不下一步,拒绝"差不多就行"
-- 🤝 **用户确认权**:AI 永远给你纠正判断的机会,不搞"越自信越强迫"
-- 🎁 **降级出路**:场景外不拒绝,给模板/跨角色 skill/飞书文档作替代
-- 📊 **自我迭代**:三层经验库(原始→模式→规则),使用越多越准
-- 📈 **Token 观测闭环**:每次 skill 调用自动记录成本,聚合成 P50/P90 反哺 SKILL.md 的 budget,迭代前后**可量化对比**(见下文"自我观测")
+- 🎯 **持久编排器**:单对话跑完全流程,11 个门禁节点自动追踪,不用切对话
+- 🤖 **5 角色多 Agent 协同**:PM/设计/前端/后端/QA 各有专属 Agent,门禁通过后可并行启动
+- ✅ **产出物自动质量审查**:每个环节交付前 AI 自动评分(A/B+/B/C),用户看到"成品 + 审查报告"
+- 📋 **需求澄清到可转发**:接到原始需求自动生成大白话问题清单,可直接转发给非技术人员确认
+- 🧪 **Layer 5 用户旅程测试**:像真人一样全 UI 交互测试,不跳步不 mock,解决"AI 测试通过但人类走一遍就出 bug"
+- 📐 **职责边界清晰**:PM 定义 What,研发决定 How,PRD 不越界写技术方案
+- 🚧 **门禁机制**:每个 Phase 有明确通过标准,不过闸不下一步
+- 📊 **自我迭代**:三层经验库(原始→模式→规则) + 防飘周报 + 200 条实战规则
 
 ### 详细安装和使用
 
@@ -83,9 +85,9 @@ cp -r workflow-dlc/skills/* ~/.claude/skills/
 3. **路由到对应环节 skill**,引导你完成该环节的工作(带教训、模板、checklist)
 4. **写入经验库**,使用越多,后续判断越准
 
-## 当前状态 🎉 全闭环完成(2026-04-23)
+## 当前状态 🎉 v2.0 持久编排器(2026-05-07)
 
-### 6 角色 × 28 skill 全支持
+### 6 角色 × 29 skill + 11 Agent 全支持
 
 | 角色 | skill 数 | Skill(链接 + 一句话) |
 |---|---|---|
@@ -95,7 +97,7 @@ cp -r workflow-dlc/skills/* ~/.claude/skills/
 | **QA** | 4 | [qa-strategy](skills/qa-strategy/SKILL.md):4层分层测试策略设计 / [qa-cases](skills/qa-cases/SKILL.md):按层产出用例存用例库 / [qa-execution](skills/qa-execution/SKILL.md):提测冒烟+bug分级+回归 / [qa-retrospective](skills/qa-retrospective/SKILL.md):测试策略/自动化复盘 |
 | **设计师** | 5 | [design-alignment](skills/design-alignment/SKILL.md):对齐+PRD验证+交付 / [design-system](skills/design-system/SKILL.md):Token三层架构设计系统 / [design-prototype](skills/design-prototype/SKILL.md):10类帧覆盖+组装红线 / [design-review](skills/design-review/SKILL.md):8项系统化深度审查 / [design-responsive](skills/design-responsive/SKILL.md):8条规则多断点适配 |
 | **Agent 设计师** | 4 | [agent-scenario](skills/agent-scenario/SKILL.md):交互模型+场景+用户画像 / [agent-interaction](skills/agent-interaction/SKILL.md):三步确认链路设计 / [agent-learning](skills/agent-learning/SKILL.md):日志→AI汇总→学习循环 / [agent-phasing](skills/agent-phasing/SKILL.md):P0-P3分期规划 |
-| **跨角色** | 2 | [workflow-start](skills/workflow-start/SKILL.md):自动判断角色环节并路由 / [socratic-dialogue](skills/socratic-dialogue/SKILL.md):三步对话法启动任何新任务 |
+| **跨角色** | 2 | [workflow-start](skills/workflow-start/SKILL.md):持久编排器(门禁驱动多Agent协同) / [socratic-dialogue](skills/socratic-dialogue/SKILL.md):三步对话法启动任何新任务 |
 
 ### 交付里程碑
 
@@ -106,12 +108,22 @@ cp -r workflow-dlc/skills/* ~/.claude/skills/
 | M3 后端 + QA | 后端 4 + QA 4 | ✅ |
 | M3 设计师 + Agent | 设计 5 + Agent 4 | ✅ |
 | **M4 · Token 观测闭环** | hook + analyze + raw-to-patterns + budget 反哺 | ✅ 2026-04-24 |
+| **M5 · 持久编排器 v2** | Orchestrator + 门禁依赖图 + 并行调度 + 质量审查 | ✅ 2026-05-01 |
+| **M6 · 测试 + 职责边界** | Layer 5 用户旅程测试 + 数据工厂 + PRD What/How 分离 | ✅ 2026-05-07 |
 
-⏳ 后续(可选):
-- 真实项目验证 + budget 累积 10+ 样本后升级到 rules
-- skill 执行时自检 budget 异常(从"他人观察"进化成"自我观察")
-- 打包 release 到 `~/.claude/skills/`
-- 使用经验迭代
+### v2.0 新增能力(2026-05)
+
+| 能力 | 说明 |
+|------|------|
+| 持久编排器 | workflow-start 升级为全程总控,单对话跑完 DLC |
+| G0 需求澄清 | 8 维度 + 大白话问题清单(可直接转发运营) |
+| 低保真线框 | 可编辑 HTML 线框图 + wireframe-editor 工具 |
+| 产出物质量审查 | Agent 交付前自动评分 + 审查报告 |
+| Layer 5 测试 | 核心用户旅程测试(全 UI 交互,不跳步) |
+| 测试数据工厂 | 随机化输入,覆盖边界 |
+| PRD 职责边界 | PM 写 What,研发写 How,不越界 |
+| 阶段切换建议 | 关键门禁通过时提示换 session |
+| 11 个 Agent | 全量 Agent 文件就位,支持 Agent 工具派遣 |
 
 ## 快速开始
 
