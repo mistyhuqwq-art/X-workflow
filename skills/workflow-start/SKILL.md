@@ -214,6 +214,35 @@ Agent 完成后返回结构化摘要。编排器按顺序执行：
 
 并行运行时每个 Agent 独立返回，编排器逐个处理，不阻塞。
 
+### 联调并行协同（G5c 特殊处理）
+
+G5c 标记了 `parallel_agents: true`，编排器在此节点的处理方式：
+
+1. **同时派遣两个 Agent**：
+   - Frontend Agent（frontend-integration skill）
+   - Backend Agent（backend-integration skill）
+
+2. **共享协同文件**：
+   - 编排器在派遣前创建 `docs/integration/issues.md`（如不存在）
+   - 两个 Agent 的 prompt 中都指明此文件路径
+   - 前端 Agent 发现问题 → 写入 issues.md（标注 `[FE]` 前缀）
+   - 后端 Agent 发现问题 → 写入 issues.md（标注 `[BE]` 前缀）
+   - 各自修复对方提出的问题后标记 `[FIXED]`
+
+3. **通过条件**：
+   - 两个 Agent 都返回"联调通过"
+   - issues.md 中所有问题都标记为 `[FIXED]`
+   - 如果一方先完成另一方未完成 → 等待，不提前关闭门禁
+
+4. **派遣 prompt 补充**（在通用模板基础上追加）：
+   ```
+   ## 联调协同
+   - 共享文件：docs/integration/issues.md
+   - 你的前缀：[FE] 或 [BE]
+   - 发现对方的问题写入文件，修复对方提出的问题后标记 [FIXED]
+   - 全部问题解决后返回"联调通过"
+   ```
+
 ---
 
 ## 门禁依赖图
@@ -307,9 +336,18 @@ Agent 完成后返回结构化摘要。编排器按顺序执行：
     "role": "Backend",
     "skills": ["backend-coding", "backend-integration"]
   },
+  "G5c": {
+    "name": "前后端联调通过",
+    "depends_on": ["G4b", "G5b"],
+    "checkpoint_pattern": "*integration*approved*.json",
+    "role": "Frontend + Backend (并行)",
+    "skills": ["frontend-integration", "backend-integration"],
+    "parallel_agents": true,
+    "notes": "前端 Agent 和后端 Agent 并行启动联调，通过共享文件（docs/integration/issues.md）协同。前端发现问题写入 → 后端读取并修复 → 反之亦然。两个 Agent 都返回'联调通过'后门禁才过"
+  },
   "G6": {
     "name": "测试通过",
-    "depends_on": ["G4b", "G5b"],
+    "depends_on": ["G5c"],
     "checkpoint_pattern": "*qa*execution*approved*.json",
     "role": "QA",
     "skills": ["qa-strategy", "qa-cases", "qa-execution"]
