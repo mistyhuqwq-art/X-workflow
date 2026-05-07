@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="{{PAGE_DESCRIPTION}}">
+<meta name="color-scheme" content="light only">
+<meta property="og:title" content="{{PAGE_TITLE}}">
+<meta property="og:description" content="{{PAGE_DESCRIPTION}}">
+<title>{{PAGE_TITLE}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Serif+4:ital,wght@1,400&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:ital,wght@1,400&display=swap');
+
+  :root {
+    --bg:         #fbf1e0;
+    --text:       #2a1f3d;
+    --text-sub:   #4a3d66;
+    --text-dim:   #8b7ea8;
+    --line:       #2a1f3d;
+    --candy-pink:  #ffdbe5;
+    --candy-blue:  #c7e0f4;
+    --candy-yellow:#fff3b0;
+    --accent:      #ec4899;
+    --accent-alt:  #4f8ec7;
+
+    --sans:  'Space Grotesk', 'Noto Sans SC', -apple-system, sans-serif;
+    --serif: 'Source Serif 4', 'Noto Serif SC', Georgia, serif;
+    --mono:  'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+  /* CRT 细扫描线(标志性) */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      0deg, transparent 0, transparent 3px,
+      rgba(42,31,61,0.025) 3px, rgba(42,31,61,0.025) 4px
+    );
+    z-index: 1;
+  }
+  ::selection { background: var(--accent); color: #fff; }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 80px 48px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ---- Hero ---- */
+  .hero { padding: 16px 0 64px; }
+  .decor-row {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 32px; flex-wrap: wrap;
+  }
+  .pixel-star {
+    font-family: var(--mono);
+    font-size: 20px; color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    background: #fff;
+    border: 2.5px solid var(--line);
+    border-radius: 100px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    box-shadow: 3px 3px 0 var(--line);
+  }
+  .pill .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--sans);
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    margin-bottom: 28px;
+    color: var(--text);
+  }
+  h1 .k {
+    background: var(--candy-pink);
+    padding: 0 12px;
+    border: 3px solid var(--line);
+    box-shadow: 5px 5px 0 var(--line);
+    display: inline-block;
+    transform: rotate(-1.5deg);
+    margin: 0 4px;
+  }
+  h1 .k2 {
+    color: var(--accent-alt);
+    font-style: italic;
+    font-family: var(--serif);
+    font-weight: 400;
+    padding: 0 0.15em;
+  }
+  /* 中文版:避免中文伪斜体对齐问题,用粗衬线替代 */
+  h1 .k2-cn {
+    color: var(--accent-alt);
+    font-style: normal;
+    font-family: var(--serif);
+    font-weight: 700;
+    padding: 0 0.1em;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 48px;
+    max-width: 580px;
+    line-height: 1.55;
+    border-left: 6px solid var(--line);
+    padding-left: 18px;
+  }
+
+  /* ---- Section base ---- */
+  section { padding: 56px 0; }
+
+  .tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  .tag::before {
+    content: ''; width: 10px; height: 10px;
+    background: var(--accent);
+    box-shadow:
+      2px 0 0 var(--accent), 0 2px 0 var(--accent),
+      -2px 0 0 var(--accent), 0 -2px 0 var(--accent);
+  }
+
+  h2 {
+    font-family: var(--sans);
+    font-size: clamp(30px, 4.2vw, 40px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  h2 .k {
+    color: var(--accent);
+    font-style: italic;
+    font-family: var(--serif);
+    font-weight: 400;
+    padding: 0 0.12em;
+  }
+  h2 .k-cn {
+    color: var(--accent);
+    font-style: normal;
+    font-family: var(--serif);
+    font-weight: 700;
+    padding: 0 0.08em;
+  }
+
+  .lead {
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 40px;
+    max-width: 620px;
+    line-height: 1.6;
+  }
+
+  /* ---- 糖果卡片(签名)---- */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .rcard {
+    background: #fff;
+    border: 3px solid var(--line);
+    border-radius: 8px;
+    padding: 22px 20px;
+    box-shadow: 5px 5px 0 var(--line);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .rcard:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--line);
+  }
+  .rcard:nth-child(3n+1) { background: var(--candy-pink); }
+  .rcard:nth-child(3n+2) { background: var(--candy-blue); }
+  .rcard:nth-child(3n+3) { background: var(--candy-yellow); }
+
+  .rcard .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    opacity: 0.55;
+    margin-bottom: 10px;
+  }
+  .rcard h3 {
+    font-family: var(--sans);
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .rcard p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  /* ---- 印章(打破齐整)---- */
+  .sticker {
+    display: inline-block;
+    background: var(--line);
+    color: var(--bg);
+    padding: 8px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transform: rotate(-4deg);
+    box-shadow: 3px 3px 0 var(--accent);
+  }
+
+  /* ---- 一句话强调段(密度跳变)---- */
+  .oneliner {
+    padding: 96px 0;
+  }
+  .oneliner .pull {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(24px, 3.4vw, 36px);
+    font-weight: 400;
+    color: var(--text);
+    max-width: 720px;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+  .oneliner .pull b {
+    font-family: var(--sans);
+    font-style: normal;
+    font-weight: 700;
+    background: var(--candy-yellow);
+    padding: 0 6px;
+    border: 2px solid var(--line);
+    display: inline-block;
+    box-shadow: 3px 3px 0 var(--line);
+  }
+
+  /* ---- 数字墙 ---- */
+  .stats-row {
+    display: flex; gap: 40px;
+    padding: 32px 0;
+    border-top: 3px solid var(--line);
+    border-bottom: 3px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .stats-row .num {
+    font-family: var(--sans);
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+  .stats-row .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+
+  /* ---- CTA ---- */
+  .cta-row {
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+    margin-top: 40px;
+  }
+  .btn-primary {
+    display: inline-block;
+    padding: 14px 26px;
+    background: var(--accent);
+    color: #fff;
+    border: 3px solid var(--line);
+    border-radius: 8px;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 4px 4px 0 var(--line);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-primary:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--line);
+  }
+  .btn-ghost {
+    display: inline-block;
+    padding: 14px 26px;
+    background: #fff;
+    color: var(--text);
+    border: 3px solid var(--line);
+    border-radius: 8px;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  /* ---- Footer ---- */
+  footer {
+    margin-top: 72px;
+    padding-top: 32px;
+    border-top: 2px dashed var(--line);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-sub);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer a { color: var(--accent); text-decoration: none; border-bottom: 2px solid currentColor; }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 720px) {
+    .container { padding: 56px 28px; }
+    .cards { grid-template-columns: 1fr; }
+    h1 .k { transform: none; }
+    .stats-row { gap: 24px; }
+    .sticker { transform: rotate(-2deg); }
+  }
+
+  /* ---- a11y ---- */
+  a:focus-visible, button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    .sticker, h1 .k { transform: none !important; }
+  }
+
+  /* ---- Print ---- */
+  @media print {
+    @page { margin: 16mm 14mm; }
+    body {
+      background: #fff !important;
+      color: #000 !important;
+      -webkit-print-color-adjust: exact;
+    }
+    body::after { display: none; }
+    .container { max-width: none; padding: 0; }
+    section { padding: 18pt 0; page-break-inside: avoid; }
+    h1, h2, h3 { page-break-after: avoid; }
+    .rcard, .sticker, .pill, .oneliner .pull b {
+      background: #fff !important;
+      color: #000 !important;
+      box-shadow: none !important;
+      transform: none !important;
+      border-color: #000 !important;
+    }
+    h1 .k {
+      background: #f5f5f5 !important;
+      color: #000 !important;
+      box-shadow: none !important;
+      transform: none !important;
+    }
+    h1 .k2, h2 .k, .tag, .stats-row .num { color: #000 !important; }
+    .tag::before { background: #000 !important; box-shadow: 2px 0 0 #000, 0 2px 0 #000, -2px 0 0 #000, 0 -2px 0 #000 !important; }
+    .btn-primary, .btn-ghost { background: #fff !important; color: #000 !important; box-shadow: none !important; }
+    a[href^="http"]::after { content: " (" attr(href) ")"; font-family: var(--mono); font-size: 0.85em; color: #666; }
+  }
+
+  /* ==========================================================
+     表现力开关 · body.fx-rich (retro 的进入感)
+     ==========================================================
+     Retro 本来就已经"丰富",fx-rich 不加更多糖 —— 加的是
+     "小活物" 级别的动效:闪烁、呼吸、wiggle、入场反弹。
+     ========================================================== */
+
+  /* Pixel star 节奏闪烁 (每颗错开) */
+  body.fx-rich .pixel-star {
+    display: inline-block;
+    animation: fx-retro-star 2.4s ease-in-out infinite;
+  }
+  @keyframes fx-retro-star {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+
+  /* Pill dot 呼吸 */
+  body.fx-rich .pill .dot {
+    animation: fx-retro-pulse 1.6s ease-in-out infinite;
+    box-shadow: 0 0 0 0 var(--accent);
+  }
+  @keyframes fx-retro-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(236,72,153,0.35); }
+    50% { box-shadow: 0 0 0 6px rgba(236,72,153,0); }
+  }
+
+  /* Sticker 悬停时 wiggle */
+  body.fx-rich .sticker {
+    transition: transform 0.2s;
+  }
+  body.fx-rich .sticker:hover {
+    animation: fx-retro-wiggle 0.5s ease-in-out;
+  }
+  @keyframes fx-retro-wiggle {
+    0%, 100% { transform: rotate(-4deg); }
+    25% { transform: rotate(-7deg); }
+    75% { transform: rotate(-1deg); }
+  }
+
+  /* 糖果卡片 hover 推动更强烈 + 背景微变 */
+  body.fx-rich .rcard {
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+  }
+  body.fx-rich .rcard:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0 var(--line);
+    filter: saturate(1.15);
+  }
+
+  /* 主按钮 hover 时图章感强化 */
+  body.fx-rich .btn-primary {
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  body.fx-rich .btn-primary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--line);
+  }
+
+  /* Hero 入场:h1 弹入(不是平滑滑入,是 retro 应有的 chunky) */
+  body.fx-rich h1 {
+    animation: fx-retro-stamp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s backwards;
+  }
+  @keyframes fx-retro-stamp {
+    from { opacity: 0; transform: scale(0.94); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* ---- 默认自发动效(retro-rich 的"小活物"感)---- */
+
+  /* Pixel star:每颗错开节奏,整体像 ≈ 呼吸的心跳 */
+  body.fx-rich .pixel-star {
+    animation: fx-retro-star 1.8s ease-in-out infinite;
+  }
+
+  /* Sticker 默认轻微左右漂动(chunky 感的"摇晃姿势") */
+  body.fx-rich .sticker {
+    animation: fx-retro-float 3.2s ease-in-out infinite;
+    transform-origin: center;
+  }
+  @keyframes fx-retro-float {
+    0%, 100% { transform: rotate(-4deg) translateY(0); }
+    50% { transform: rotate(-3deg) translateY(-2px); }
+  }
+  /* hover 时停止默认漂 + 用更夸张 wiggle */
+  body.fx-rich .sticker:hover {
+    animation: fx-retro-wiggle 0.5s ease-in-out;
+  }
+
+  /* 糖果卡片默认轮流微呼吸(错开 0.4s),整组像活的 */
+  body.fx-rich .rcard {
+    animation: fx-retro-breathe 3.6s ease-in-out infinite;
+  }
+  body.fx-rich .rcard:nth-child(1) { animation-delay: 0s; }
+  body.fx-rich .rcard:nth-child(2) { animation-delay: 0.4s; }
+  body.fx-rich .rcard:nth-child(3) { animation-delay: 0.8s; }
+  body.fx-rich .rcard:nth-child(4) { animation-delay: 1.2s; }
+  body.fx-rich .rcard:nth-child(5) { animation-delay: 1.6s; }
+  body.fx-rich .rcard:nth-child(6) { animation-delay: 2.0s; }
+  @keyframes fx-retro-breathe {
+    0%, 100% { box-shadow: 5px 5px 0 var(--line); }
+    50% { box-shadow: 5px 7px 0 var(--line); }
+  }
+  /* hover 时打断呼吸,进入强推模式 */
+  body.fx-rich .rcard:hover {
+    animation: none;
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0 var(--line);
+    filter: saturate(1.15);
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+  }
+
+  /* h2 accent italic 关键词轻微左右摇(只中文不漂,用 :not(.k-cn)) */
+  body.fx-rich h2 .k {
+    display: inline-block;
+    animation: fx-retro-kwiggle 4s ease-in-out infinite;
+    transform-origin: center;
+  }
+  @keyframes fx-retro-kwiggle {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(1.2deg); }
+  }
+
+  /* Pill dot 呼吸保留(节奏和原来一致) */
+
+  /* reduced motion 下关闭所有动效 */
+  @media (prefers-reduced-motion: reduce) {
+    body.fx-rich .pixel-star,
+    body.fx-rich .pill .dot,
+    body.fx-rich h1,
+    body.fx-rich .sticker,
+    body.fx-rich .rcard,
+    body.fx-rich h2 .k {
+      animation: none;
+    }
+    body.fx-rich .pill .dot { box-shadow: none; }
+    body.fx-rich .rcard,
+    body.fx-rich .btn-primary { transition: none; }
+    body.fx-rich .sticker:hover { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ====== Hero ====== -->
+  <section class="hero">
+    <div class="decor-row">
+      <span class="pixel-star">◆ ◆ ◆</span>
+      <span class="pill"><span class="dot"></span>{{PILL_TEXT}}</span>
+    </div>
+    <h1>
+      {{HERO_LINE_1}},<br>
+      <span class="k">{{HERO_BOX_WORD}}</span> {{HERO_LINE_2_MID}},<br>
+      <span class="k2">{{HERO_ITALIC_WORD}}</span>{{HERO_LINE_3_SUFFIX}}
+    </h1>
+    <p class="hero-sub">{{HERO_SUB}}</p>
+  </section>
+
+
+  <!-- ====== 糖果卡片章节 ====== -->
+  <section>
+    <div class="tag">{{SECTION_TAG_1}}</div>
+    <h2>{{H2_1_PREFIX}} <span class="k">{{H2_1_ACCENT}}</span></h2>
+    <p class="lead">{{LEAD_1}}</p>
+
+    <div class="cards">
+      <div class="rcard">
+        <div class="num">{{CARD_1_NUM}}</div>
+        <h3>{{CARD_1_TITLE}}</h3>
+        <p>{{CARD_1_BODY}}</p>
+      </div>
+      <div class="rcard">
+        <div class="num">{{CARD_2_NUM}}</div>
+        <h3>{{CARD_2_TITLE}}</h3>
+        <p>{{CARD_2_BODY}}</p>
+      </div>
+      <div class="rcard">
+        <div class="num">{{CARD_3_NUM}}</div>
+        <h3>{{CARD_3_TITLE}}</h3>
+        <p>{{CARD_3_BODY}}</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ====== 一句话强调段(密度跳变)====== -->
+  <section class="oneliner">
+    <blockquote class="pull">
+      {{PULL_PREFIX}} <b>{{PULL_BOLD}}</b>{{PULL_SUFFIX}}
+    </blockquote>
+  </section>
+
+
+  <!-- ====== 数字墙 ====== -->
+  <section>
+    <div class="tag">{{SECTION_TAG_2}}</div>
+    <h2>{{H2_2_PREFIX}} <span class="k">{{H2_2_ACCENT}}</span></h2>
+    <p class="lead">{{LEAD_2}}</p>
+
+    <div class="stats-row">
+      <div>
+        <div class="num">{{STAT_1}}</div>
+        <div class="label">{{STAT_1_LABEL}}</div>
+      </div>
+      <div>
+        <div class="num">{{STAT_2}}</div>
+        <div class="label">{{STAT_2_LABEL}}</div>
+      </div>
+      <div>
+        <div class="num">{{STAT_3}}</div>
+        <div class="label">{{STAT_3_LABEL}}</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ====== 收尾 + 印章(打破齐整)====== -->
+  <section>
+    <div class="tag">{{ENDING_TAG}}</div>
+    <h2>{{ENDING_H2_PREFIX}} <span class="k">{{ENDING_H2_ACCENT}}</span></h2>
+    <p class="lead">{{ENDING_LEAD}}</p>
+    <div class="cta-row">
+      <a class="btn-primary" href="{{CTA_URL}}">{{CTA_TEXT}} →</a>
+      <a class="btn-ghost" href="{{CTA_2_URL}}">{{CTA_2_TEXT}}</a>
+      <span class="sticker">{{STICKER_TEXT}}</span>
+    </div>
+  </section>
+
+
+  <!-- ====== Footer ====== -->
+  <footer>
+    <div>{{FOOTER_LEFT}}</div>
+    <div>{{FOOTER_RIGHT}}</div>
+  </footer>
+
+</div>
+
+</body>
+</html>

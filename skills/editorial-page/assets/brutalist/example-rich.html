@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ugly Deck Manifesto · 一份反对精致 PPT 文化的宣言。Brutalist 风味示例页 · fx-rich。">
+<meta name="color-scheme" content="light only">
+<meta property="og:title" content="Ugly Deck · A Manifesto">
+<meta property="og:description" content="We don't need another 40-slide pitch deck. Brutalist example.">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://mistyhuqwq-art.github.io/editorial-page-skill/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mistyhuqwq-art.github.io/editorial-page-skill/og-image.png">
+<title>Ugly Deck Manifesto · Brutalist example (fx-rich)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@500;700;900&display=swap');
+
+  :root {
+    --bg: #ffe500; --text: #000; --bg-alt: #000; --fg-alt: #ffe500; --fg-sub: #222; --line: #000;
+    --sans: 'Space Grotesk', 'Noto Sans SC', -apple-system, sans-serif;
+    --display: 'Archivo Black', 'Space Grotesk', 'Noto Sans SC', sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0; }
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.4; font-weight: 500; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--text); color: var(--bg); }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 64px 48px; }
+
+  .hero { padding: 24px 0 56px; }
+  .decor-row { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+  .stamp { display: inline-block; background: var(--text); color: var(--bg); padding: 6px 14px; font-family: var(--mono); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; transform: rotate(-3deg); }
+  .meta-line { font-family: var(--mono); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .meta-line::before { content: '█  '; }
+
+  h1 { font-family: var(--display); font-size: clamp(56px, 9vw, 112px); font-weight: 900; line-height: 0.92; letter-spacing: -0.04em; text-transform: uppercase; color: var(--text); margin-bottom: 32px; }
+  :lang(zh) h1 { text-transform: none; }
+  h1 .k { background: var(--bg-alt); color: var(--fg-alt); padding: 0 0.2em; display: inline-block; transform: skewX(-4deg); margin: 0 2px; }
+  h1 .k-cn { background: var(--bg-alt); color: var(--fg-alt); padding: 0 0.15em; display: inline-block; }
+
+  .hero-sub { font-size: 17px; color: var(--text); font-weight: 500; margin-bottom: 48px; max-width: 620px; line-height: 1.55; border-left: 6px solid var(--line); padding-left: 18px; }
+
+  .bar { height: 4px; background: var(--line); margin: 48px 0; }
+  .bar.thick { height: 6px; }
+
+  section { padding: 56px 0; }
+  .tag { display: inline-block; font-family: var(--mono); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 16px; }
+  .tag::before { content: '█  '; }
+
+  h2 { font-family: var(--display); font-size: clamp(36px, 5vw, 56px); font-weight: 900; line-height: 1; letter-spacing: -0.03em; text-transform: uppercase; color: var(--text); margin-bottom: 12px; }
+  :lang(zh) h2 { text-transform: none; }
+  h2 .k { background: var(--bg-alt); color: var(--fg-alt); padding: 0 0.15em; display: inline-block; transform: skewX(-4deg); }
+  h2 .k-cn { background: var(--bg-alt); color: var(--fg-alt); padding: 0 0.12em; display: inline-block; }
+
+  .lead { font-size: 16px; color: var(--text); font-weight: 500; margin-bottom: 32px; max-width: 620px; line-height: 1.55; }
+
+  p { font-size: 16px; color: var(--text); line-height: 1.65; font-weight: 500; margin-bottom: 18px; max-width: 640px; }
+  p b { font-weight: 700; }
+
+  .blocks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 24px; }
+  .block { padding: 28px 24px; border: 3px solid var(--line); margin-right: -3px; }
+  .block:last-child { margin-right: 0; }
+  .block.b1 { background: var(--text); color: var(--bg); }
+  .block.b2 { background: var(--bg); color: var(--text); }
+  .block.b3 { background: var(--text); color: var(--bg); }
+  .block .num { font-family: var(--display); font-size: 48px; font-weight: 900; line-height: 1; margin-bottom: 10px; letter-spacing: -0.04em; }
+  .block h3 { font-family: var(--sans); font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 8px; }
+  :lang(zh) .block h3 { text-transform: none; letter-spacing: 0; }
+  .block p { font-size: 13.5px; line-height: 1.55; font-weight: 500; color: inherit; margin-bottom: 0; max-width: none; }
+
+  .screamer { padding: 96px 0; border-top: 6px solid var(--line); border-bottom: 6px solid var(--line); margin: 72px 0; }
+  .screamer-text { font-family: var(--display); font-size: clamp(80px, 14vw, 180px); font-weight: 900; line-height: 0.88; letter-spacing: -0.05em; text-transform: uppercase; color: var(--text); margin-bottom: 28px; }
+  :lang(zh) .screamer-text { text-transform: none; font-size: clamp(60px, 10vw, 120px); }
+  .screamer-text .k { background: var(--bg-alt); color: var(--fg-alt); padding: 0 0.12em; display: inline-block; transform: skewX(-3deg); }
+  .screamer-text .k-cn { background: var(--bg-alt); color: var(--fg-alt); padding: 0 0.1em; display: inline-block; }
+  .screamer-sub { font-family: var(--sans); font-size: 17px; font-weight: 500; color: var(--text); max-width: 540px; line-height: 1.5; border-left: 6px solid var(--line); padding-left: 18px; }
+
+  .stats { display: flex; gap: 0; padding: 32px 0; border-top: 4px solid var(--line); border-bottom: 4px solid var(--line); flex-wrap: wrap; }
+  .stats > div { flex: 1; padding: 20px 24px; border-right: 3px solid var(--line); min-width: 180px; }
+  .stats > div:last-child { border-right: none; }
+  .stats .num { font-family: var(--display); font-size: clamp(48px, 6vw, 72px); font-weight: 900; line-height: 0.95; letter-spacing: -0.04em; margin-bottom: 8px; }
+  .stats .label { font-family: var(--mono); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; max-width: 200px; line-height: 1.4; }
+
+  .cta-row { display: flex; gap: 0; flex-wrap: wrap; margin-top: 32px; }
+  .btn { display: inline-block; padding: 18px 28px; font-family: var(--sans); font-size: 15px; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em; border: 4px solid var(--line); }
+  :lang(zh) .btn { text-transform: none; letter-spacing: 0; }
+  .btn-primary { background: var(--text); color: var(--bg); }
+  .btn-primary:hover { background: var(--bg); color: var(--text); }
+  .btn-ghost { background: var(--bg); color: var(--text); margin-left: -4px; }
+  .btn-ghost:hover { background: var(--text); color: var(--bg); }
+
+  footer { margin-top: 72px; padding-top: 24px; border-top: 4px solid var(--line); font-family: var(--mono); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer a { color: var(--text); border-bottom: 3px solid var(--text); text-decoration: none; }
+
+  /* 手写注释作者痕迹(PRINCIPLES 原则 5) */
+  .handwritten {
+    font-family: 'Space Grotesk', cursive;
+    font-style: italic;
+    font-size: 14px;
+    transform: rotate(-1.2deg);
+    display: inline-block;
+    padding: 4px 10px;
+    border: 2px solid var(--line);
+    background: var(--bg);
+    margin-top: 16px;
+  }
+
+  @media (max-width: 720px) {
+    .container { padding: 48px 24px; }
+    .blocks { grid-template-columns: 1fr; }
+    .block { margin-right: 0; margin-bottom: -3px; }
+    .block:last-child { margin-bottom: 0; }
+    .stats { flex-direction: column; }
+    .stats > div { border-right: none; border-bottom: 3px solid var(--line); }
+    .stats > div:last-child { border-bottom: none; }
+    .cta-row { flex-direction: column; }
+    .btn-ghost { margin-left: 0; margin-top: -4px; }
+  }
+
+  a:focus-visible, button:focus-visible { outline: 4px solid var(--text); outline-offset: 4px; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    .stamp, h1 .k, h2 .k, .screamer-text .k, .handwritten { transform: none !important; }
+  }
+
+  @media print {
+    @page { margin: 16mm 14mm; }
+    body { background: #fff !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .container { max-width: none; padding: 0; }
+    section { padding: 18pt 0; page-break-inside: avoid; }
+    .block.b1, .block.b3 { background: #000 !important; color: #fff !important; }
+    .block.b2 { background: #fff !important; color: #000 !important; }
+    .blocks { page-break-inside: avoid; }
+    .stamp { background: #000 !important; color: #fff !important; transform: none !important; }
+    h1 .k, h2 .k, .screamer-text .k { background: #000 !important; color: #fff !important; transform: none !important; }
+    h1 .k-cn, h2 .k-cn, .screamer-text .k-cn { background: #000 !important; color: #fff !important; }
+    h1, h2, .screamer-text { page-break-after: avoid; }
+    .btn-primary { background: #000 !important; color: #fff !important; }
+    .btn-ghost { background: #fff !important; color: #000 !important; }
+    .btn:hover { background: inherit !important; }
+    a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; color: #666; }
+  }
+
+  /* ==========================================================
+     表现力开关 · body.fx-rich (brutalist 的进入感)
+     ==========================================================
+     Brutalist 本来就"大声",fx-rich 加的是"chunky 的动感"——
+     stamp 摇晃、screamer 弹入、block hover 翻转、按钮位移
+     都用刚猛的方式(无缓动曲线,或直接 step 过渡)。
+     ========================================================== */
+
+  /* Stamp 入场时 wiggle */
+  body.fx-rich .stamp {
+    animation: fx-brut-stamp 0.8s ease-out 0.2s backwards;
+  }
+  @keyframes fx-brut-stamp {
+    0% { opacity: 0; transform: rotate(-20deg) scale(1.3); }
+    60% { transform: rotate(0deg) scale(1.02); }
+    100% { opacity: 1; transform: rotate(-3deg) scale(1); }
+  }
+
+  /* h1 弹入 */
+  body.fx-rich h1 {
+    animation: fx-brut-crash 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) 0.1s backwards;
+  }
+  @keyframes fx-brut-crash {
+    from { opacity: 0; transform: scale(0.88); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Screamer 从下方弹入(巨大字号配上弹跳入场 = 声量的视觉化) */
+  body.fx-rich .screamer-text {
+    animation: fx-brut-shout 0.7s cubic-bezier(0.2, 1, 0.3, 1) backwards;
+  }
+  @keyframes fx-brut-shout {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* 反色块 hover 时翻转颜色 (chunky 感) */
+  body.fx-rich .block {
+    transition: background 0.15s step-end, color 0.15s step-end;
+  }
+  body.fx-rich .block.b1:hover, body.fx-rich .block.b3:hover {
+    background: var(--bg) !important;
+    color: var(--text) !important;
+  }
+  body.fx-rich .block.b2:hover {
+    background: var(--text) !important;
+    color: var(--bg) !important;
+  }
+
+  /* 按钮 hover 刚猛位移 (不是柔和的 translate,是 step) */
+  body.fx-rich .btn {
+    transition: transform 0.1s steps(2), background 0.1s step-end, color 0.1s step-end;
+  }
+  body.fx-rich .btn:hover {
+    transform: translate(-2px, -2px);
+  }
+
+  /* Handwritten 签名入场(从 -5deg 旋到 -1.2deg) */
+  body.fx-rich .handwritten {
+    animation: fx-brut-signoff 0.9s ease-out 0.8s backwards;
+  }
+  @keyframes fx-brut-signoff {
+    from { opacity: 0; transform: rotate(-5deg); }
+    to { opacity: 1; transform: rotate(-1.2deg); }
+  }
+
+  /* reduced motion 下关闭所有 */
+  @media (prefers-reduced-motion: reduce) {
+    body.fx-rich .stamp,
+    body.fx-rich h1,
+    body.fx-rich .screamer-text,
+    body.fx-rich .handwritten {
+      animation: none;
+    }
+    body.fx-rich .block,
+    body.fx-rich .btn { transition: none; }
+  }
+</style>
+</head>
+<body class="fx-rich">
+
+<div class="container">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="decor-row">
+      <span class="stamp">▲ MANIFESTO · 2026</span>
+      <span class="meta-line">v1.0 · read in 4 min</span>
+    </div>
+    <h1>
+      UGLY DECKS<br>
+      <span class="k">SHIP</span>.<br>
+      PRETTY ONES<br>
+      <span class="k">SIT</span>.
+    </h1>
+    <p class="hero-sub">一份关于 "精致 PPT 文化" 的反对宣言。这不是"不要做设计",是"不要假装自己在做设计"。少写一些 40 页的汇报 deck,多发一些 3 张手绘草图。</p>
+  </section>
+
+
+  <!-- 反色块网格 -->
+  <section>
+    <div class="tag">THREE RULES</div>
+    <h2>LOUD. WEIRD.<br>ON <span class="k">PURPOSE</span>.</h2>
+    <p class="lead">粗野派不是丑。是拒绝客套。三条原则,写给还在纠结 gradient 选哪种蓝的人。</p>
+
+    <div class="blocks">
+      <div class="block b1">
+        <div class="num">01</div>
+        <h3>Break grid</h3>
+        <p>轻微的歪斜、错位、溢出,是特性不是 bug。grid 是工具,不是教条。</p>
+      </div>
+      <div class="block b2">
+        <div class="num">02</div>
+        <h3>Max contrast</h3>
+        <p>纯黄 + 纯黑。没有灰色地带,没有柔和过渡。你的观点也应该这样。</p>
+      </div>
+      <div class="block b3">
+        <div class="num">03</div>
+        <h3>Be direct</h3>
+        <p>说人话。别用"赋能""闭环""抓手"这类黑话。它们不是句子,是拖延症。</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Screamer(签名段) -->
+  <section class="screamer">
+    <div class="screamer-text">SAY IT<br><span class="k">LOUD</span>.</div>
+    <p class="screamer-sub">不是所有东西都要精致。有些东西只需要被听见。</p>
+  </section>
+
+
+  <!-- 段落内容 -->
+  <section>
+    <div class="tag">THE PROBLEM</div>
+    <h2>我们怎么<span class="k-cn">走到今天</span>的?</h2>
+    <p class="lead">一次 40 页汇报,占用 3 个人 2 周。决策者真的看了 4 页。</p>
+    <p>现代知识工作的默认产物是 <b>一份精致的 deck</b>。字号对齐,配色和谐,图标来自同一个库,每一页都像同一个模板复制。</p>
+    <p>这本来是效率工具,但它变成了<b>拖延的借口</b> —— "我还在做 deck"=" 我还在思考"="请不要问我结论"。</p>
+    <p>真正的观点不需要 40 页。<b>一句话 + 3 张手画草图 + 1 段真实数据</b>,够了。deck 的精致度和观点的清晰度,往往成反比。</p>
+  </section>
+
+
+  <!-- 数字墙 -->
+  <section>
+    <div class="tag">THE COST</div>
+    <h2><span class="k-cn">真实</span>代价</h2>
+    <div class="stats">
+      <div>
+        <div class="num">18h</div>
+        <div class="label">AVG TIME PER DECK</div>
+      </div>
+      <div>
+        <div class="num">4%</div>
+        <div class="label">SLIDES ACTUALLY READ</div>
+      </div>
+      <div>
+        <div class="num">0</div>
+        <div class="label">MINDS CHANGED BY ANIMATION</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CTA -->
+  <section>
+    <div class="tag">NEXT MEETING</div>
+    <h2>DO THIS <span class="k">INSTEAD</span></h2>
+    <p class="lead">下次会议,试试:1 张 A4 纸手写要点,不做 deck。如果你的观点不能写在一张纸上,它还没准备好被提出。</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#">TRY THE 1-PAGER →</a>
+      <a class="btn btn-ghost" href="#">Sign the manifesto</a>
+    </div>
+    <div class="handwritten">made in 3 hours. shipped anyway. — X &amp; 小克</div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer>
+    <div>UGLY DECK MFG · EST. 2026 · MIT</div>
+    <div><a href="#">Discuss</a> &nbsp;/&nbsp; <a href="#">Source</a></div>
+  </footer>
+
+</div>
+
+</body>
+</html>

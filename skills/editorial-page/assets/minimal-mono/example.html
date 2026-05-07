@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Why I deleted 40% of my startup's code · 一篇关于代码删除的技术随笔。Minimal Mono 示例页。">
+<meta name="color-scheme" content="light only">
+<meta property="og:title" content="Why I deleted 40% of my startup's code">
+<meta property="og:description" content="一篇关于代码删除的技术随笔。Minimal Mono 示例页。">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://mistyhuqwq-art.github.io/editorial-page-skill/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mistyhuqwq-art.github.io/editorial-page-skill/og-image.png">
+<title>Why I deleted 40% · Minimal Mono example</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+  :root {
+    --bg:         #ffffff;
+    --text:       #000000;
+    --text-sub:   #333333;
+    --text-mid:   #666666;
+    --text-dim:   #999999;
+    --line:       #cccccc;
+    --line-heavy: #000000;
+    --bg-code:    #f5f5f5;
+    --sans: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.65; -webkit-font-smoothing: antialiased; font-weight: 400; }
+  ::selection { background: var(--text); color: var(--bg); }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 64px 48px; position: relative; }
+  .container::before {
+    content: '';
+    position: absolute;
+    left: 48px; top: 120px; bottom: 96px;
+    width: 1px;
+    background: var(--text);
+    opacity: 0.06;
+  }
+
+  .meta { font-family: var(--mono); font-size: 12px; color: var(--text-dim); margin-bottom: 48px; display: flex; gap: 24px; flex-wrap: wrap; }
+  .meta span::before { content: '/ '; color: #bbb; }
+  .meta span:first-child::before { content: ''; }
+
+  .hero { padding: 56px 0 48px; }
+  h1 { font-family: var(--sans); font-size: clamp(40px, 6vw, 56px); font-weight: 300; line-height: 1.08; letter-spacing: -0.025em; color: var(--text); margin-bottom: 28px; }
+  h1 b { font-weight: 900; }
+  .hero-sub { font-size: 16px; color: var(--text-sub); max-width: 540px; line-height: 1.7; margin-bottom: 32px; }
+
+  section { padding: 48px 0; }
+  .rule { border-top: 1px solid var(--text); padding-top: 32px; margin-top: 32px; }
+  .tag { font-family: var(--mono); font-size: 12px; color: var(--text); font-weight: 500; margin-bottom: 16px; }
+  .tag::before { content: '# '; color: var(--text-dim); }
+
+  h2 { font-family: var(--sans); font-size: clamp(24px, 3.2vw, 30px); font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 12px; }
+  h2 b { font-weight: 900; }
+  .lead { font-size: 14.5px; color: var(--text-mid); margin-bottom: 32px; max-width: 580px; }
+  p { font-size: 15px; color: var(--text-sub); margin-bottom: 18px; line-height: 1.75; }
+  p b { color: var(--text); font-weight: 700; }
+
+  .list { list-style: none; padding: 0; }
+  .list li { padding: 14px 0; border-top: 1px dashed var(--line); display: grid; grid-template-columns: 32px 1fr; gap: 16px; align-items: baseline; }
+  .list li:last-child { border-bottom: 1px dashed var(--line); }
+  .list .n { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+  .list .body { font-size: 14.5px; color: var(--text-sub); line-height: 1.65; }
+  .list .body b { color: var(--text); font-weight: 700; }
+
+  .pull { padding: 40px 0 40px 72px; font-size: clamp(19px, 2.4vw, 24px); font-weight: 300; line-height: 1.4; color: var(--text); letter-spacing: -0.01em; max-width: 620px; position: relative; }
+  .pull::before { content: '"'; position: absolute; left: 24px; top: 24px; font-size: 64px; color: var(--text-dim); font-weight: 300; line-height: 1; }
+  .pull cite { display: block; margin-top: 16px; font-family: var(--mono); font-size: 12px; color: var(--text-dim); font-style: normal; }
+
+  .code-block { background: var(--bg-code); padding: 18px 20px; font-family: var(--mono); font-size: 13px; color: var(--text); line-height: 1.7; overflow-x: auto; margin: 24px 0; }
+  .code-block .cmt { color: var(--text-dim); }
+  .code-block .del { color: var(--text-dim); text-decoration: line-through; }
+
+  .footnotes { margin-top: 56px; padding-top: 24px; border-top: 1px dashed var(--line); font-family: var(--mono); font-size: 12px; color: var(--text-mid); line-height: 1.8; }
+  .footnotes p { margin-bottom: 6px; font-size: 12px; color: var(--text-mid); }
+  .fn { color: var(--text-dim); }
+
+  .cta-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: baseline; margin-top: 32px; padding-top: 32px; border-top: 1px dashed var(--line); }
+  .btn { display: inline-block; padding: 10px 20px; border: 1px solid var(--text); color: var(--text); background: var(--bg); text-decoration: none; font-size: 14px; font-weight: 500; font-family: var(--sans); transition: background 0.15s, color 0.15s; }
+  .btn:hover { background: var(--text); color: var(--bg); }
+
+  footer { margin-top: 72px; padding-top: 28px; border-top: 1px solid var(--text); font-family: var(--mono); font-size: 12px; color: var(--text-mid); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer a { color: var(--text); text-decoration: none; border-bottom: 1px solid currentColor; }
+
+  /* 作者痕迹 · 跳号编号(PRINCIPLES 原则 6 打破齐整) */
+  .list .n.skip { color: var(--text); text-decoration: line-through; }
+
+  @media (max-width: 640px) {
+    .container { padding: 48px 28px; }
+    .container::before { left: 28px; }
+    .pull { padding: 28px 0 28px 44px; }
+    .pull::before { left: 4px; top: 16px; font-size: 44px; }
+    .list li { grid-template-columns: 28px 1fr; gap: 12px; }
+  }
+
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; } }
+
+  @media print {
+    @page { margin: 20mm 18mm; }
+    body { font-size: 11pt; background: #fff !important; color: #000 !important; }
+    .container { max-width: none; padding: 0; }
+    .container::before { display: none; }
+    .hero { padding: 0 0 24pt; page-break-after: avoid; }
+    section { padding: 18pt 0; page-break-inside: avoid; }
+    .list li, .pull, .rule, .code-block { page-break-inside: avoid; }
+    h1, h2, h3 { page-break-after: avoid; }
+    a[href^="http"]::after { content: " [" attr(href) "]"; font-family: var(--mono); font-size: 0.82em; color: #666; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="meta">
+    <span>2026.04.23</span>
+    <span>essay · 14 min read</span>
+    <span>draft</span>
+  </div>
+
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Why I deleted <b>40%</b><br>of my startup's <b>code</b>.</h1>
+    <p class="hero-sub">三个月前我们从 12 万行砍到 7.2 万行,什么都没少做,反而快了。这不是 "less is more" 的口号,是一次具体的重构笔记。</p>
+    <p class="hero-sub" style="font-size: 14px; color: var(--text-mid);">写给还在给产品 "加功能" 的年轻工程师——你可能在加的,是未来要维护的债。</p>
+  </section>
+
+
+  <!-- 第一章: 三个发现 -->
+  <section>
+    <div class="rule">
+      <div class="tag">findings</div>
+      <h2>三个被 <b>删除</b> 后才发现的事实</h2>
+      <p class="lead">这些不是节省工时的 trick,是关于"复杂度真实来源"的观察。</p>
+
+      <ul class="list">
+        <li>
+          <span class="n">01</span>
+          <span class="body"><b>防御式代码占了 30%</b> —— 那些 try/catch、null check、fallback,大多数永远不会触发。当我们去掉并认真思考边界时,真正需要防御的场景其实不到 6 处。</span>
+        </li>
+        <li>
+          <span class="n">02</span>
+          <span class="body"><b>"配置化" 是过度设计的温床</b> —— 我们有 14 个 feature flag,其中 11 个从来没被关过。把它们硬编码后,代码变得可读,bug 变得可追。</span>
+        </li>
+        <li>
+          <span class="n">03</span>
+          <span class="body"><b>抽象比重复危险得多</b> —— 3 个相似但不同的函数被强行抽成 1 个通用的,随后一年里每次修改都要改 3 个 caller。恢复成 3 个独立函数后,每个都更清晰、改动更局部。</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+
+  <!-- 提拉引用 -->
+  <section>
+    <blockquote class="pull">
+      The best code is the code you didn't have to write.
+      The second best is the code you had the courage to delete.
+      <cite>— old engineering wisdom, restated</cite>
+    </blockquote>
+  </section>
+
+
+  <!-- 代码对比 -->
+  <section>
+    <div class="rule">
+      <div class="tag">before · after</div>
+      <h2>一个<b>具体</b>的例子</h2>
+      <p class="lead">把一段 28 行的 "灵活" 实现,换成 4 行的直白实现。</p>
+
+      <div class="code-block">
+<span class="cmt">// BEFORE · 28 lines · "extensible" abstraction</span>
+<span class="del">function processItem(item, options = {}) {</span>
+<span class="del">  const validators = options.validators || defaultValidators;</span>
+<span class="del">  const transformers = options.transformers || [];</span>
+<span class="del">  const errorHandler = options.onError || logAndContinue;</span>
+<span class="del">  // ... 22 more lines of indirection</span>
+<span class="del">}</span>
+
+<span class="cmt">// AFTER · 4 lines · does exactly what we need</span>
+function processItem(item) {
+  if (!item.id) throw new Error('missing id');
+  return { ...item, processed_at: Date.now() };
+}
+      </div>
+
+      <p>一年下来 `processItem` 只被调用了 3 处,全都是用默认配置。所谓的 "extensibility" 完全没人用过——却让代码读起来像看谜。<b>删掉之后,新同事理解这段逻辑的时间从半小时变成 30 秒</b>。</p>
+    </div>
+  </section>
+
+
+  <!-- 结论章节: 打破齐整(PRINCIPLES 原则 6) - 故意跳号 -->
+  <section>
+    <div class="rule">
+      <div class="tag">conclusion</div>
+      <h2>所以,<b>什么时候</b>该删?</h2>
+      <p class="lead">不是"有空就删"——是三个信号出现时,立刻删:</p>
+
+      <ul class="list">
+        <li>
+          <span class="n">01</span>
+          <span class="body"><b>没人记得它为什么存在。</b> git log / blame 显示超过 6 个月没人改,且没人能说出它解决的问题——高概率是僵尸代码。</span>
+        </li>
+        <li>
+          <span class="n">02</span>
+          <span class="body"><b>修 bug 总要"顺便改它"。</b> 说明它耦合过深,且它提供的抽象已经不匹配现状。删掉它,bug 的修复路径反而变短。</span>
+        </li>
+        <li>
+          <span class="n skip">03</span>
+          <span class="body" style="color: var(--text-dim);"><s><b>它覆盖不到的 edge case 越来越多。</b></s> <span style="font-size: 12px; color: var(--text-dim);">(这条本来在这,但我决定删掉——写成这样已经是过度抽象了。)</span></span>
+        </li>
+        <li>
+          <span class="n">04</span>
+          <span class="body"><b>它的名字说不清。</b> 被命名为 `Util` / `Helper` / `Common` / `Manager` 的模块,80% 的情况下应该被解散成更具体的函数。</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+
+  <!-- CTA -->
+  <section>
+    <div class="cta-row">
+      <a class="btn" href="#">Read the full teardown →</a>
+      <a class="btn" href="#">Discuss on HN</a>
+    </div>
+  </section>
+
+
+  <!-- 脚注 -->
+  <div class="footnotes">
+    <p><span class="fn">[1]</span> 12 万行 → 7.2 万行 是 src/ 目录,不含 node_modules 和 migration 历史。</p>
+    <p><span class="fn">[2]</span> "快了" 指的是 p95 页面加载从 1.4s 降到 0.9s,但更重要的是<b>部署恢复时间从 40 分钟降到 12 分钟</b>。</p>
+    <p><span class="fn">[3]</span> 本文灵感来自 Rich Hickey 的 Simple Made Easy。</p>
+  </div>
+
+
+  <!-- Footer -->
+  <footer>
+    <div>shipped 2026.04.23 — by X &amp; 小克</div>
+    <div><a href="#">home</a> &nbsp; <a href="#">rss</a> &nbsp; <a href="#">github</a></div>
+  </footer>
+
+</div>
+
+</body>
+</html>

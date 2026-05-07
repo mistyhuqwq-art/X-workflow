@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="flux · 一个为"一次做对"而设计的命令行迁移工具。示例页,展示 Tech Dark 风味。">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="flux · Database migrations you don't need to babysit">
+<meta property="og:description" content="为"一次做对"而设计的命令行迁移工具。示例页。">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://mistyhuqwq-art.github.io/editorial-page-skill/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mistyhuqwq-art.github.io/editorial-page-skill/og-image.png">
+<title>flux · Tech Dark example</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Source+Serif+4:ital,wght@1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&family=Noto+Serif+SC:ital,wght@0,400;0,500;1,400&display=swap');
+
+  :root {
+    --bg: #1c1b1a;
+    --fg: #fafaf9;
+    --fg-sub: #a8a29e;
+    --fg-muted: #78716c;
+    --fg-dim: #57534e;
+    --line: rgba(255,255,255,0.08);
+    --bg-code: #0f0e0c;
+    --accent: #9eff00;
+    --accent-dim: rgba(158,255,0,0.12);
+    --sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    --serif: 'Source Serif 4', 'Noto Serif SC', Georgia, serif;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  .container { max-width: 920px; margin: 0 auto; padding: 0 56px; }
+
+  /* Hero */
+  .hero { min-height: 88vh; display: flex; flex-direction: column; justify-content: center; padding: 96px 0 64px; }
+  .kicker { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 12px; color: var(--fg-sub); letter-spacing: 0.02em; margin-bottom: 40px; }
+  .kicker::before { content: ''; width: 18px; height: 1px; background: var(--fg-sub); }
+  h1 { font-family: var(--sans); font-size: clamp(44px, 5.5vw, 64px); font-weight: 500; line-height: 1.02; letter-spacing: -0.04em; color: var(--fg); margin-bottom: 28px; }
+  h1 .k { font-family: var(--serif); font-weight: 400; font-style: italic; color: var(--accent); padding: 0 0.15em; }
+  h1 .k-cn { font-family: var(--serif); font-weight: 700; font-style: normal; color: var(--accent); padding: 0 0.1em; }
+  .hero-sub { font-size: 17px; color: var(--fg-sub); margin-bottom: 56px; max-width: 560px; line-height: 1.55; }
+  .hero-meta { display: flex; gap: 48px; font-family: var(--mono); font-size: 11px; color: var(--fg-muted); letter-spacing: 0.04em; text-transform: uppercase; padding-top: 28px; border-top: 1px solid var(--line); }
+  .hero-meta div dt { color: var(--fg-dim); margin-bottom: 4px; }
+  .hero-meta div dd { color: var(--fg-sub); }
+
+  /* Section base */
+  section { padding: 72px 0; }
+  .hairline { height: 1px; background: var(--line); margin: 40px 0 48px; }
+  .tag { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+  h2 { font-family: var(--sans); font-size: clamp(28px, 3.6vw, 36px); font-weight: 500; line-height: 1.1; letter-spacing: -0.025em; color: var(--fg); margin-bottom: 12px; }
+  h2 .k { font-family: var(--serif); font-weight: 400; font-style: italic; color: var(--accent); padding: 0 0.12em; }
+  h2 .k-cn { font-family: var(--serif); font-weight: 700; font-style: normal; color: var(--accent); padding: 0 0.08em; }
+  .lead { font-size: 15px; color: var(--fg-sub); margin-bottom: 40px; max-width: 580px; line-height: 1.55; }
+
+  /* Stack + Row */
+  .stack { display: flex; flex-direction: column; }
+  .row { display: grid; grid-template-columns: 56px 1fr auto; gap: 24px; padding: 22px 0; border-top: 1px solid var(--line); align-items: baseline; }
+  .row:last-child { border-bottom: 1px solid var(--line); }
+  .row .num { font-family: var(--mono); font-size: 12px; color: var(--fg-dim); }
+  .row .body h3 { font-family: var(--sans); font-size: 17px; font-weight: 500; color: var(--fg); letter-spacing: -0.01em; margin-bottom: 4px; }
+  .row .body p { font-size: 14px; color: var(--fg-sub); line-height: 1.5; }
+  .row .tag-end { font-family: var(--mono); font-size: 11px; color: var(--fg-dim); white-space: nowrap; }
+
+  /* 极短章节 (密度跳变,满足 PRINCIPLES 原则 2) */
+  .oneliner { padding: 96px 0; text-align: left; }
+  .oneliner .pull {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(22px, 2.8vw, 32px);
+    font-weight: 400;
+    color: var(--fg-sub);
+    max-width: 640px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+  .oneliner .pull b { color: var(--fg); font-style: normal; font-family: var(--sans); font-weight: 500; }
+  .oneliner cite {
+    display: block;
+    margin-top: 24px;
+    font-family: var(--mono);
+    font-size: 12px; color: var(--fg-dim);
+    font-style: normal;
+    letter-spacing: 0.04em;
+  }
+
+  /* Stats row */
+  .stats-row { display: flex; gap: 56px; padding: 32px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .stats-row .num { font-family: var(--sans); font-size: 36px; font-weight: 300; color: var(--fg); line-height: 1; margin-bottom: 6px; letter-spacing: -0.03em; }
+  .stats-row .num .unit { font-family: var(--mono); font-size: 14px; color: var(--fg-muted); margin-left: 4px; font-weight: 400; }
+  .stats-row .label { font-family: var(--mono); font-size: 11px; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* Code block */
+  .code-block { background: var(--bg-code); border: 1px solid var(--line); border-radius: 4px; padding: 20px 24px; font-family: var(--mono); font-size: 13px; color: #c8c8c0; line-height: 1.75; overflow-x: auto; }
+  .code-block .cmt { color: var(--fg-dim); }
+  .code-block .kw  { color: var(--accent); }
+  .code-block .str { color: #d7b48f; }
+
+  /* CTA */
+  .cta-row { display: flex; gap: 14px; margin-top: 40px; flex-wrap: wrap; align-items: center; }
+  .btn-primary { display: inline-block; padding: 12px 24px; background: var(--accent); color: var(--bg); border-radius: 4px; font-family: var(--sans); font-size: 14px; font-weight: 500; text-decoration: none; }
+  .btn-ghost { display: inline-block; padding: 12px 24px; color: var(--fg); border: 1px solid var(--line); border-radius: 4px; font-family: var(--sans); font-size: 14px; font-weight: 500; text-decoration: none; }
+  .chip { display: inline-block; padding: 4px 10px; background: var(--accent-dim); color: var(--accent); border-radius: 3px; font-family: var(--mono); font-size: 11px; }
+
+  /* Ending */
+  .ending { min-height: 50vh; display: flex; flex-direction: column; justify-content: center; padding: 80px 0 100px; }
+  .ending h2 { margin-bottom: 16px; }
+  .ending .lead { margin-bottom: 40px; }
+
+  /* Footer */
+  footer { padding: 40px 0 60px; font-family: var(--mono); font-size: 12px; color: var(--fg-muted); border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  footer a { color: var(--fg-sub); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  /* 作者痕迹: 一个故意错位的版本号签名 (PRINCIPLES 原则 6 打破齐整) */
+  .sign-off {
+    position: relative;
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px; color: var(--fg-dim);
+    margin-top: 28px;
+    transform: rotate(-0.5deg);  /* 极微倾斜 */
+    padding-left: 14px;
+    border-left: 2px solid var(--accent);
+  }
+
+  @media (max-width: 720px) {
+    .container { padding: 0 32px; }
+    .hero { padding: 64px 0 48px; min-height: auto; }
+    section { padding: 48px 0; }
+    .oneliner { padding: 56px 0; }
+    .row { grid-template-columns: 40px 1fr; }
+    .row .tag-end { display: none; }
+    .hero-meta { flex-direction: column; gap: 20px; }
+    .stats-row { gap: 32px; }
+  }
+
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  }
+
+  @media print {
+    @page { margin: 16mm 14mm; }
+    body { background: #fff !important; color: #1a1a1a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .container { max-width: none; padding: 0; }
+    .hero { min-height: auto; padding: 0 0 24pt; page-break-after: avoid; }
+    .ending, .oneliner { min-height: auto; padding: 24pt 0; }
+    section { padding: 24pt 0; page-break-inside: avoid; }
+    h1, h2, h3 { page-break-after: avoid; color: #1a1a1a !important; }
+    h1 .k, h2 .k, .tag, .kicker, .row .num, .row .tag-end { color: #4a1a6e !important; }
+    .hairline, .stats-row, .row { border-color: #ddd !important; }
+    .btn-primary { background: #4a1a6e !important; color: #fff !important; }
+    .btn-ghost { border-color: #999 !important; color: #1a1a1a !important; }
+    .chip { background: #f5f0ff !important; color: #4a1a6e !important; }
+    .code-block { background: #f5f5f5 !important; color: #1a1a1a !important; border-color: #ddd !important; }
+    .code-block .kw { color: #4a1a6e !important; }
+    .oneliner .pull { color: #333 !important; }
+    a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; color: #666; word-break: break-all; }
+    .btn-primary::after, .btn-ghost::after { content: ""; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ====== Hero ====== -->
+  <section class="hero">
+    <div class="kicker">FLUX v2.4.0 · BUILD 2026-04-23</div>
+    <h1>
+      Database migrations<br>
+      you don't need to <span class="k">babysit</span>.
+    </h1>
+    <p class="hero-sub">一个为"一次做对"而设计的命令行迁移工具。真·dry-run,真·自动回滚,真·无需 DBA 看着你按回车。给从 Postgres 到 SQLite 的团队,开源,12 KB 二进制。</p>
+    <dl class="hero-meta">
+      <div><dt>Status</dt><dd>Beta · MIT</dd></div>
+      <div><dt>Binary</dt><dd>12 KB</dd></div>
+      <div><dt>Languages</dt><dd>Go</dd></div>
+    </dl>
+  </section>
+
+
+  <!-- ====== 原则列表 (Tech Dark 签名排版) ====== -->
+  <section>
+    <div class="tag">PRINCIPLES</div>
+    <h2>Three things we <span class="k">won't</span> do</h2>
+    <p class="lead">反过来说比较清楚:flux 不做什么。</p>
+    <div class="hairline"></div>
+
+    <div class="stack">
+      <div class="row">
+        <div class="num">01</div>
+        <div class="body">
+          <h3>No magic migrations</h3>
+          <p>flux 不会替你 "智能识别" schema 改动。你写什么 SQL,它跑什么 SQL。宁可啰嗦,不要惊喜。</p>
+        </div>
+        <div class="tag-end">philosophy</div>
+      </div>
+      <div class="row">
+        <div class="num">02</div>
+        <div class="body">
+          <h3>No hidden state</h3>
+          <p>所有迁移历史用一张普通表记录,字段是人类可读的。不用专有格式、不加密、不压缩。</p>
+        </div>
+        <div class="tag-end">transparency</div>
+      </div>
+      <div class="row">
+        <div class="num">03</div>
+        <div class="body">
+          <h3>No "auto-fix"</h3>
+          <p>迁移失败时 flux 会回滚并停下,不会尝试"修复"或跳过。你比它更懂这个库的语义。</p>
+        </div>
+        <div class="tag-end">safety</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ====== 极短章节: 引语 (密度跳变,PRINCIPLES 原则 2) ====== -->
+  <section class="oneliner">
+    <blockquote class="pull">
+      "Most migration tools break at the worst possible moment.
+      We <b>tested for that moment first</b>."
+    </blockquote>
+    <cite>— flux team, 内部 RFC-003 · 2025-11</cite>
+  </section>
+
+
+  <!-- ====== 数字墙: 具体证据 (PRINCIPLES 原则 5 作者痕迹) ====== -->
+  <section>
+    <div class="tag">IN THE WILD</div>
+    <h2>3 年,<span class="k-cn">真实</span>生产数字</h2>
+    <p class="lead">不是 marketing claim,是社区自愿上报 + 我们内部使用的数据。</p>
+
+    <div class="stats-row">
+      <div>
+        <div class="num">2,740<span class="unit">repos</span></div>
+        <div class="label">using flux in prod</div>
+      </div>
+      <div>
+        <div class="num">38M<span class="unit">+</span></div>
+        <div class="label">migrations executed</div>
+      </div>
+      <div>
+        <div class="num">0<span class="unit"></span></div>
+        <div class="label">data loss incidents reported</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ====== 代码块: 实际用法 ====== -->
+  <section>
+    <div class="tag">USAGE · 30 SECONDS</div>
+    <h2>看代码比听解释<span class="k-cn">快</span></h2>
+    <p class="lead">本节省略英文官方文档链接,只展示三条最常用命令。</p>
+
+    <div class="code-block">
+<span class="cmt"># 新建迁移 (会生成 up.sql / down.sql 两个文件)</span>
+<span class="kw">flux new</span> add_user_email_index
+
+<span class="cmt"># Dry-run: 显示会执行的 SQL,不真跑</span>
+<span class="kw">flux up</span> --dry-run --env=production
+
+<span class="cmt"># 真跑 + 自动回滚 (任何一步失败则整体 rollback)</span>
+<span class="kw">flux up</span> --env=production --atomic
+
+<span class="cmt"># 查看迁移历史 (纯 SQL 表,可用任何 DB 工具打开)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="str">flux_history</span> <span class="kw">ORDER BY</span> applied_at;
+    </div>
+  </section>
+
+
+  <!-- ====== 收尾 CTA ====== -->
+  <section class="ending">
+    <div class="tag">GET STARTED</div>
+    <h2>一条命令,<span class="k-cn">五分钟</span>跑通</h2>
+    <p class="lead">Mac / Linux 单二进制,不依赖 runtime。Windows 用 WSL 或 Docker。</p>
+    <div class="cta-row">
+      <a class="btn-primary" href="#">brew install flux</a>
+      <a class="btn-ghost" href="#">Read the docs</a>
+      <span class="chip">v2.4.0-beta</span>
+    </div>
+
+    <!-- 作者痕迹 + 打破齐整 (PRINCIPLES 原则 5 & 6) -->
+    <div class="sign-off">
+      shipped from a coffee shop in Beijing,<br>
+      by X &amp; 小克 · commit a3f7c91
+    </div>
+  </section>
+
+</div>
+
+
+<!-- ====== Footer ====== -->
+<footer class="container" style="max-width: 920px;">
+  <div>FLUX · OPEN SOURCE · MIT</div>
+  <div>
+    <a href="https://github.com/example/flux">github</a> ·
+    <a href="#">docs</a> ·
+    <a href="#">discord</a>
+  </div>
+</footer>
+
+</body>
+</html>
