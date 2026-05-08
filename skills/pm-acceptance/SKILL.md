@@ -20,7 +20,7 @@ Phase 0 先问用户是哪个场景。
 
 本 skill 深度依赖以下资产,执行时按需读取:
 
-- 📋 **[PRD 模板](../../templates/prd-template.md)** — 产品终审时,以 18 章骨架为对照基准,逐章校验 PRD ↔ 高保真一致性
+- 📋 **[PRD 模板](../../templates/prd-template.md)** — 产品终审时,以 PRD v2.0 结构为对照基准,逐章校验 PRD ↔ 高保真一致性
 - 📚 **[PM 教训全集](../../lessons/by-role/pm.md)** — 验收阶段常见坑(G-W-T 验收标准 / 上线前漏项)
 
 ## 门禁原则(Gate-based)

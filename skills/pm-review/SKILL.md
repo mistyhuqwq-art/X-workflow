@@ -24,7 +24,7 @@ description: PM PRD 评审 skill。PRD v1.0 产出后,引导 PM 组织三端(服
 
 本 skill 深度依赖以下资产,执行时按需读取:
 
-- 📋 **[PRD 模板](../../templates/prd-template.md)** — 评审基准:每条 review 意见对照 18 章结构落点
+- 📋 **[PRD 模板](../../templates/prd-template.md)** — 评审基准:每条 review 意见对照 PRD v2.0 结构落点（7.N 五子章节 + 职责边界）
 - 📚 **[PM 教训全集](../../lessons/by-role/pm.md)** — PRD 评审常见坑(澄清项推断 / 继承逻辑缺失 / 三端串行)
 
 ## 门禁原则(Gate-based)
